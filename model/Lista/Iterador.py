@@ -1,16 +1,16 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
-class Iterator(ABC):            #Corre todos os elementos da lista. 
-    def __init__(self, data):
-        self.data = data
-        self.index = 0
-
+class ClientLinkedListIterator:
+    def __init__(self, linked_list):
+        self.linked_list = linked_list
+        self.current_node = linked_list.head
+    
     def __iter__(self):
         return self
-
+    
     def __next__(self):
-        if self.index >= len(self.data):
+        if self.current_node is None:
             raise StopIteration
-        value = self.data[self.index]
-        self.index += 1
+        value = self.current_node.get_element()
+        self.current_node = self.current_node.get_next_node()
         return value

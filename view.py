@@ -2,8 +2,10 @@ import tkinter as tk
 from tkinter import messagebox
 from model.Cliente import *
 from model.Lista.LinkedList import *
+from model.Lista.Iterador import *
 
 class View:
+
     def __init__(self, master):
     
         self.master = master
@@ -13,9 +15,7 @@ class View:
         self.frame = tk.Frame(self.master)
         self.frame.pack()
         self.frame_inicial()
-
-        self.cliente = None
-
+    
     def frame_inicial(self):   #frame login 
         if self.frame:
             self.frame.destroy()
@@ -92,7 +92,9 @@ class View:
         
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_inicial)
         self.voltar_button.grid(row=9, column=0)    #.pack()
-    
+
+
+        
     def registar(self):
         nome_registo = self.nome_entry.get()
         password_registo = self.password_entry.get()
@@ -131,17 +133,11 @@ class View:
             cliente.set_password(password_registo)
             cliente.set_nif(nif)
             lista_clientes.append(cliente)
+            lista_clientes.print_list()
+            
             if self.frame:
                 self.frame.destroy()
                 self.frame_inicial()
-
-            self.nome_entry.delete(0, tk.END)
-            self.password_entry.delete(0, tk.END)
-            self.password_entry_2.delete(0, tk.END)
-            self.nif_entry.delete(0, tk.END)
-
-            lista_clientes.print_list()
-
             
             #fazer o registo numa linked list
     
