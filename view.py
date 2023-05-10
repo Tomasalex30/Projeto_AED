@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from model.Cliente import *
+from model.Lista.LinkedList import *
 
 class View:
     def __init__(self, master):
@@ -12,6 +13,8 @@ class View:
         self.frame = tk.Frame(self.master)
         self.frame.pack()
         self.frame_inicial()
+
+        self.cliente = None
 
     def frame_inicial(self):   #frame login 
         if self.frame:
@@ -30,8 +33,6 @@ class View:
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)
         self.password_entry.grid(row=3, column=0)
-        self.info_password = tk.Label(self.frame, text="A palavra passe deve ter no máximo 16 carácteres")
-        self.info_password.grid(row=8, column=0)
 
         self.voltar_button = tk.Button(self.frame, text="VER/OCULTAR", command=self.ver_login)
         self.voltar_button.grid(row=3, column=1)
@@ -73,8 +74,9 @@ class View:
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry_2 = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)
         self.password_entry_2.grid(row=5, column=0)
-        self.info_password = tk.Label(self.frame, text="")
+        self.info_password = tk.Label(self.frame, text="A palavra passe deve ter no máximo 16 carácteres")
         self.info_password.grid(row=10, column=0)
+
 
         self.ver_ocultar_button = tk.Button(self.frame, text="VER/OCULTAR", command=self.ver_registo)
         self.ver_ocultar_button.grid(row=3, column=1)
@@ -109,6 +111,7 @@ class View:
             verificacao_registo = False
         if password_registo != password_registo_2 and len(password_registo_2)>0 and len(password_registo)>0:
             messagebox.showinfo("Erro", "Passwords diferentes")
+            verificacao_registo = False
         if len(nif)==0:
             messagebox.showinfo("Erro", "Complete o NIF") 
             verificacao_registo = False   
@@ -122,7 +125,24 @@ class View:
         #verificar se o nif já existe
 
         if verificacao_registo == True:
-            pass
+            cliente = Cliente()
+            lista_clientes = LinkedList()
+            cliente.set_nome(nome_registo)
+            cliente.set_password(password_registo)
+            cliente.set_nif(nif)
+            lista_clientes.append(cliente)
+            if self.frame:
+                self.frame.destroy()
+                self.frame_inicial()
+
+            self.nome_entry.delete(0, tk.END)
+            self.password_entry.delete(0, tk.END)
+            self.password_entry_2.delete(0, tk.END)
+            self.nif_entry.delete(0, tk.END)
+
+            lista_clientes.print_list()
+
+            
             #fazer o registo numa linked list
     
     def login(self):

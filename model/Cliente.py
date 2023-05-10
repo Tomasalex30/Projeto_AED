@@ -1,3 +1,5 @@
+from model.Lista.LinkedList import *
+
 class Cliente:
     def init(self, nome, password, nif):
         self.nome = nome
@@ -17,4 +19,4 @@ class Cliente:
     def get_nif(self):
         return self.nif
     def set_nif(self, novo_nif):
-        self.__nif = novo_nif
+        self.nif = novo_nif

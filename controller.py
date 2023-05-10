@@ -1,5 +1,5 @@
 from view import *
 
 class Controller:
-    def init(self, master):
+    def __init__(self, master):
         self.view = View(master)
