@@ -1,8 +1,10 @@
 import tkinter as tk
+import re
 from tkinter import messagebox , ttk
 from model.Cliente import *
 from model.Lista.LinkedList import *
 from model.Lista.Iterador import *
+
 
 class View:
 
@@ -96,17 +98,6 @@ class View:
                             self.frame.destroy()
                             self.frame_menu()
             
-                        # self.frame = tk.Frame(self.master)
-                        # self.frame.pack()
-                        
-                        # self.master.title("Menu")
-                        # self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: " )
-                        # self.adicionar_depesas.grid(row=3 , column=1)
-                        # self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: " )
-                        # self.ver_depesas.grid(row=4 , column=1)
-                        # self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:")
-                        # self.orcamento.grid(row=5 , column=1)
-                        #continuar aqui login 
                     else:
                         messagebox.showinfo("Erro", "Credenciais inválidas")
                         if self.frame:
@@ -142,14 +133,15 @@ class View:
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)
         self.password_entry.grid(row=3, column=0)
+
         self.password_label_2 = tk.Label(self.frame, text="REPETIR PASSWORD")
         self.password_label_2.grid(row=4, column=0)   #.pack()
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry_2 = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)
         self.password_entry_2.grid(row=5, column=0)
+
         self.info_password = tk.Label(self.frame, text="A palavra passe deve ter no máximo 16 carácteres")
         self.info_password.grid(row=10, column=0)
-
 
         self.ver_ocultar_button = tk.Button(self.frame, text="VER/OCULTAR", command=self.ver_registo)
         self.ver_ocultar_button.grid(row=3, column=1)
@@ -252,7 +244,7 @@ class View:
         self.frame = tk.Frame(self.master)
         self.frame.pack()
         
-        self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ", command=self.frame_add_despesas)
+        self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ", command=self.frame_adicionar_despesas)
         self.adicionar_depesas.grid(row=3 , column=1,)#not working
         self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: ", command = self.frame_ver_despesa )
         self.ver_depesas.grid(row=5 , column=1,)#not working
@@ -261,7 +253,7 @@ class View:
         self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login)
         self.sign_out.grid(row=9 , column=1)#not working
         
-    def frame_add_despesas(self): #frame add despesas
+    def frame_adicionar_despesas(self): #frame add despesas
 
         if self.frame:
             self.frame.destroy()
@@ -270,7 +262,7 @@ class View:
         self.frame.pack()
 
         self.master.geometry("500x300")
-        self.master.title("Adicionar Despesas")
+        self.master.title("Adicionar Despesas") 
         self.master.resizable(False, False)
         self.frame = tk.Frame(self.master)
         self.frame.pack()
@@ -281,34 +273,76 @@ class View:
         self.combo = ttk.Combobox(
             self.frame,
             state="readonly",
-            values=["Selecione a Categoria", "a", "b", "c", "d"]  # Valores das categorias separados por espaços
+            values=["Selecione a Categoria", "a", "b", "c", "d"]  
         )
+
         self.combo.grid(row=0, column=1)
         self.combo.current(0)
 
-        self.nome_label = ttk.Label(self.frame, text="Descrição")
-        self.nome_label.grid(row=1, column=0)
+        self.descricao_label = ttk.Label(self.frame, text="Descrição")
+        self.descricao_label.grid(row=1, column=0)
+        self.descricao_entry = tk.Entry(self.frame)
+        self.descricao_entry.grid(row=1, column=1, pady=5)
 
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=1, column=1, pady=5)
+        self.valor_label = ttk.Label(self.frame, text="Valor da despesa")
+        self.valor_label.grid(row=2, column=0)
+        self.valor_entry = tk.Entry(self.frame)
+        self.valor_entry.grid(row=2, column=1, pady=5)
 
-        self.nome_label = ttk.Label(self.frame, text="Valor da despesa")
-        self.nome_label.grid(row=2, column=0)
+        valor_numerico = self.master.register(self.verificar_numerico)
+        self.valor_entry.config(validate="key", validatecommand=(valor_numerico, "%P"))
 
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=2, column=1, pady=5)
+        self.data_label = ttk.Label(self.frame, text="Data da despesa")
+        self.data_label.grid(row=3, column=0)
 
-        self.nome_label = ttk.Label(self.frame, text="Data da despesa")
-        self.nome_label.grid(row=3, column=0)
+        #Cabeçalho dia
+        dia_label = ttk.Label(self.frame, text="Dia")
+        dia_label.grid(row=3, column=1, padx=5, pady=5)
 
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=3, column=1, pady=5)
+        #Cabeçalho mes
+        mes_label = ttk.Label(self.frame, text="Mês")
+        mes_label.grid(row=3, column=2, padx=5, pady=5)
+
+        #Cabeçalho ano
+        ano_label = ttk.Label(self.frame, text="Ano")
+        ano_label.grid(row=3, column=3, padx=5, pady=5)
+        
+        # Combobox para selecionar o dia
+        self.dia_combo = ttk.Combobox(self.frame, state="readonly", values=list(range(1, 32)))
+        self.dia_combo.grid(row=3, column=1, padx=5, pady=5)
+        self.dia_combo.current(0)
+
+        # Combobox para selecionar o mês
+        self.mes_combo = ttk.Combobox(self.frame, state="readonly", values=list(range(1, 13)))
+        self.mes_combo.grid(row=3, column=2, padx=5, pady=5)
+        self.mes_combo.current(0)
+
+        # Combobox para selecionar o ano
+        self.ano_combo = ttk.Combobox(self.frame, state="readonly", values=list(range(2020, 2030)))
+        self.ano_combo.grid(row=3, column=3, padx=5, pady=5)
+        self.ano_combo.current(0)
 
         self.adicionar_button = tk.Button(self.frame, text="ADICIONAR", command="")
         self.adicionar_button.grid(row=4, column=0)
+        
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
         self.voltar_button.grid(row=4, column=1)
+
+    def verificar_numerico(self, value):
+        return re.match(r"^\d*\.?\d*$", value) is not None
+    
+    def adicionar_despesas(self):
+        categoria = self.combo.get()
+        descricao = self.descricao_entry.get()
+        valor = self.valor_entry.get()
+        data = self.data_entry.get()
+
+        verificacao_despesas = True
+        if len(descricao) > 160:
+            messagebox.showinfo("Erro", "Descrição demasiado longa!")
+            verificacao_despesas = False
         
+      
     def frame_ver_despesa(self):    #frame ver despesas
         if self.frame:
             self.frame.destroy()
