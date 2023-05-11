@@ -14,12 +14,18 @@ class View:
         self.master.resizable(False, False)
         self.frame = tk.Frame(self.master)
         self.frame.pack()
-        self.frame_inicial()
+        self.frame_login()
     
-    def frame_inicial(self):   #frame login 
+    def frame_login(self):   #frame login 
         if self.frame:
             self.frame.destroy()
         
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.master.geometry("500x300")
+        self.master.title("Login")
+        self.master.resizable(False, False)
         self.frame = tk.Frame(self.master)
         self.frame.pack()
 
@@ -45,6 +51,73 @@ class View:
 
         self.quit_button = tk.Button(self.frame, text="SAIR", command=exit)
         self.quit_button.grid(row=6, column=0)  #.pack()
+
+    def login(self):
+            username_login = self.nome_entry.get()
+            password_login = self.password_entry.get()
+            
+            verificacao_login = True
+            if len(username_login)==0 :
+                messagebox.showinfo("Erro", "Complete o nome")
+                verificacao_login = False
+
+            if len(password_login)==0 :
+                messagebox.showinfo("Erro", "Complete a password")
+                verificacao_login = False
+
+            if len(password_login) > 0 and len(password_login) < 8:
+                messagebox.showinfo("Erro", "Password Pequena") 
+                verificacao_login = False
+            
+            if verificacao_login == False:
+                if self.frame:
+                    self.frame.destroy()
+                    self.frame_login()
+
+            if verificacao_login == True:
+                count = 0
+                for cliente in self.clientes_lista:
+                    if cliente != None:
+                        count += 1
+                if count == 0:
+                    messagebox.showinfo("Erro", "Não existem Utilizadores Registados") 
+                    verificacao_login = False
+                
+                if verificacao_login == True:
+                    cliente_encontrado = None
+                    for cliente in self.clientes_lista:
+                        if cliente.get_nome() == username_login and cliente.get_password() == password_login:
+                            cliente_encontrado = cliente
+                            break
+                    
+                    if cliente_encontrado:
+                        messagebox.showinfo("Sucesso", "Login bem-sucedido")
+                        if self.frame:
+                            self.frame.destroy()
+                            self.frame_menu()
+            
+                        # self.frame = tk.Frame(self.master)
+                        # self.frame.pack()
+                        
+                        # self.master.title("Menu")
+                        # self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: " )
+                        # self.adicionar_depesas.grid(row=3 , column=1)
+                        # self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: " )
+                        # self.ver_depesas.grid(row=4 , column=1)
+                        # self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:")
+                        # self.orcamento.grid(row=5 , column=1)
+                        #continuar aqui login 
+                    else:
+                        messagebox.showinfo("Erro", "Credenciais inválidas")
+                        if self.frame:
+                            self.frame.destroy()
+                            self.frame_login()
+
+    def ver_login(self):
+        if self.password_entry["show"] == "*":
+            self.password_entry["show"] = ""
+        else:
+            self.password_entry["show"] ="*"
 
     def frame_registo(self): #frame registo
         if self.frame:
@@ -90,9 +163,81 @@ class View:
         self.login_button = tk.Button(self.frame, text="REGISTAR", command=self.registar)
         self.login_button.grid(row=8, column=0) #.pack()
         
-        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_inicial)
+        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_login)
         self.voltar_button.grid(row=9, column=0)    #.pack()
     
+    def registar(self):
+            nome_registo = self.nome_entry.get()
+            password_registo = self.password_entry.get()
+            password_registo_2 = self.password_entry_2.get()
+            nif = self.nif_entry.get()
+            
+            verificacao_registo = True
+            if len(nome_registo)==0 :
+                messagebox.showinfo("Erro", "Complete o nome")
+                verificacao_registo = False
+
+            if len(password_registo)==0  :
+                messagebox.showinfo("Erro", "Complete a password")
+                verificacao_registo = False
+
+            if len(password_registo_2)==0  :
+                messagebox.showinfo("Erro", "Complete a confirmação de password")
+                verificacao_registo = False
+
+            if password_registo != password_registo_2 and len(password_registo_2)>0 and len(password_registo)>0:
+                messagebox.showinfo("Erro", "Passwords diferentes")
+                verificacao_registo = False
+
+            if len(nif)==0:
+                messagebox.showinfo("Erro", "Complete o NIF") 
+                verificacao_registo = False
+
+            if len(password_registo) > 0 and len(password_registo) < 8:
+                messagebox.showinfo("Erro", "Password Pequena") 
+                verificacao_registo = False
+
+            if len(nif) > 0 and len(nif) < 9:
+                messagebox.showinfo("Erro", "NIF Pequeno")
+                verificacao_registo = False
+
+            for cliente in self.clientes_lista:
+                if cliente.get_nome() == nome_registo:
+                    messagebox.showinfo("Erro", "Nome de registo já existente")
+                    verificacao_registo = False
+                    break
+
+            for cliente in self.clientes_lista:
+                if cliente.get_nif() == nif:
+                    messagebox.showinfo("Erro", "NIF já existente")
+                    verificacao_registo = False
+                    break
+
+            if verificacao_registo == False:
+                if self.frame:
+                    self.frame.destroy()
+                    self.frame_registo()
+
+            if verificacao_registo == True:
+                cliente = Cliente(nome_registo,password_registo,nif)
+                #cliente.set_nome(nome_registo)
+                #cliente.set_password(password_registo)
+                #cliente.set_nif(nif)
+                self.clientes_lista.append(cliente)
+                self.clientes_lista.print_list()
+                    
+                if self.frame:
+                    self.frame.destroy()
+                    self.frame_login()
+            
+    def ver_registo(self):
+        if self.password_entry["show"] == "*" and self.password_entry_2["show"] == "*" :
+            self.password_entry["show"] = ""
+            self.password_entry_2["show"] = ""
+        else :
+            self.password_entry["show"] ="*"
+            self.password_entry_2["show"] = "*"
+
     def frame_menu(self): #frame menu
 
         if self.frame:
@@ -108,17 +253,19 @@ class View:
         self.frame.pack()
         
         self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ", command=self.frame_add_despesas)
-        self.adicionar_depesas.grid(row=3 , column=1)#not working
+        self.adicionar_depesas.grid(row=3 , column=1,)#not working
         self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: ", command = self.frame_ver_despesa )
-        self.ver_depesas.grid(row=5 , column=1)#not working
+        self.ver_depesas.grid(row=5 , column=1,)#not working
         self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:", command= self.frame_ver_orcamento)
         self.orcamento.grid(row=7 , column=1)#not working
+        self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login)
+        self.sign_out.grid(row=9 , column=1)#not working
         
     def frame_add_despesas(self): #frame add despesas
 
         if self.frame:
             self.frame.destroy()
-        
+
         self.frame = tk.Frame(self.master)
         self.frame.pack()
 
@@ -129,35 +276,38 @@ class View:
         self.frame.pack()
 
         self.label = tk.Label(self.frame, text="Categoria da despesa")
-        self.label.grid(row=0, column=0)    #.pack()
-        #self.combo = ttk.Combobox(
-        #    state="readonly",
-        #    values=["Python", "C", "C++", "Java"]
-        #    )
-        #self.combo.grid(row=1, column=0)
-        #self.button = ttk.Button(text="Display selection", command=self.display_selection)
-        #self.combo.place(x = 150 ,y = 25)
-        #self.frame.mainloop()
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=1, column=0, pady=5)   #.pack()
+        self.label.grid(row=0, column=0)
 
-        self.nome_label = tk.Label(self.frame, text="Descrição")
-        self.nome_label.grid(row=3, column=0)   #.pack()
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=4, column=0, pady=5)   #.pack()
+        self.combo = ttk.Combobox(
+            self.frame,
+            state="readonly",
+            values=["Selecione a Categoria", "a", "b", "c", "d"]  # Valores das categorias separados por espaços
+        )
+        self.combo.grid(row=0, column=1)
+        self.combo.current(0)
 
-        self.nome_label = tk.Label(self.frame, text="Valor da despesa")
-        self.nome_label.grid(row=6, column=0)   #.pack()
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=7, column=0, pady=5)   #.pack()
+        self.nome_label = ttk.Label(self.frame, text="Descrição")
+        self.nome_label.grid(row=1, column=0)
 
-        self.nome_label = tk.Label(self.frame, text="Data da despesa ")
-        self.nome_label.grid(row=9, column=0)   #.pack()
         self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=10, column=0, pady=5)   #.pack()
-        
+        self.nome_entry.grid(row=1, column=1, pady=5)
+
+        self.nome_label = ttk.Label(self.frame, text="Valor da despesa")
+        self.nome_label.grid(row=2, column=0)
+
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=2, column=1, pady=5)
+
+        self.nome_label = ttk.Label(self.frame, text="Data da despesa")
+        self.nome_label.grid(row=3, column=0)
+
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=3, column=1, pady=5)
+
+        self.adicionar_button = tk.Button(self.frame, text="ADICIONAR", command="")
+        self.adicionar_button.grid(row=4, column=0)
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
-        self.voltar_button.grid(row=12, column=0)
+        self.voltar_button.grid(row=4, column=1)
         
     def frame_ver_despesa(self):    #frame ver despesas
         if self.frame:
@@ -198,8 +348,11 @@ class View:
         self.nome_entry = tk.Entry(self.frame)
         self.nome_entry.grid(row=4, column=0, pady=5)   #.pack()
         
+        self.definir_orc_button = tk.Button(self.frame, text="DEFINIR", command="")
+        self.definir_orc_button.grid(row=6, column=0)
+
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
-        self.voltar_button.grid(row=6, column=0)
+        self.voltar_button.grid(row=7, column=0)
 
     def display_selection(self):
     
@@ -208,145 +361,7 @@ class View:
             message=f"The selected value is: {selection}",
             title="Selection"
         )        
-    def registar(self):
-        nome_registo = self.nome_entry.get()
-        password_registo = self.password_entry.get()
-        password_registo_2 = self.password_entry_2.get()
-        nif = self.nif_entry.get()
-        
-        verificacao_registo = True
-        if len(nome_registo)==0 :
-            messagebox.showinfo("Erro", "Complete o nome")
-            verificacao_registo = False
-
-        if len(password_registo)==0  :
-            messagebox.showinfo("Erro", "Complete a password")
-            verificacao_registo = False
-
-        if len(password_registo_2)==0  :
-            messagebox.showinfo("Erro", "Complete a confirmação de password")
-            verificacao_registo = False
-
-        if password_registo != password_registo_2 and len(password_registo_2)>0 and len(password_registo)>0:
-            messagebox.showinfo("Erro", "Passwords diferentes")
-            verificacao_registo = False
-
-        if len(nif)==0:
-            messagebox.showinfo("Erro", "Complete o NIF") 
-            verificacao_registo = False
-
-        if len(password_registo) > 0 and len(password_registo) < 8:
-            messagebox.showinfo("Erro", "Password Pequena") 
-            verificacao_registo = False
-
-        if len(nif) > 0 and len(nif) < 9:
-            messagebox.showinfo("Erro", "NIF Pequeno")
-            verificacao_registo = False
-
-        for cliente in self.clientes_lista:
-            if cliente.get_nome() == nome_registo:
-                messagebox.showinfo("Erro", "Nome de registo já existente")
-                verificacao_registo = False
-                break
-
-        for cliente in self.clientes_lista:
-            if cliente.get_nif() == nif:
-                messagebox.showinfo("Erro", "NIF já existente")
-                verificacao_registo = False
-                break
-
-        if verificacao_registo == False:
-            if self.frame:
-                self.frame.destroy()
-                self.frame_registo()
-
-        if verificacao_registo == True:
-            cliente = Cliente(nome_registo,password_registo,nif)
-            #cliente.set_nome(nome_registo)
-            #cliente.set_password(password_registo)
-            #cliente.set_nif(nif)
-            self.clientes_lista.append(cliente)
-            self.clientes_lista.print_list()
-                
-            if self.frame:
-                self.frame.destroy()
-                self.frame_inicial()
-            
-    def login(self):
-        username_login = self.nome_entry.get()
-        password_login = self.password_entry.get()
-        
-        verificacao_login = True
-        if len(username_login)==0 :
-            messagebox.showinfo("Erro", "Complete o nome")
-            verificacao_login = False
-
-        if len(password_login)==0 :
-            messagebox.showinfo("Erro", "Complete a password")
-            verificacao_login = False
-
-        if len(password_login) > 0 and len(password_login) < 8:
-            messagebox.showinfo("Erro", "Password Pequena") 
-            verificacao_login = False
-        
-        if verificacao_login == False:
-            if self.frame:
-                self.frame.destroy()
-                self.frame_inicial()
-
-        if verificacao_login == True:
-            count = 0
-            for cliente in self.clientes_lista:
-                if cliente != None:
-                    count += 1
-            if count == 0:
-                messagebox.showinfo("Erro", "Não existem Utilizadores Registados") 
-                verificacao_login = False
-            
-            if verificacao_login == True:
-                cliente_encontrado = None
-                for cliente in self.clientes_lista:
-                    if cliente.get_nome() == username_login and cliente.get_password() == password_login:
-                        cliente_encontrado = cliente
-                        break
-                
-                if cliente_encontrado:
-                    messagebox.showinfo("Sucesso", "Login bem-sucedido")
-                    if self.frame:
-                        self.frame.destroy()
-                        self.frame_menu()
-        
-                    # self.frame = tk.Frame(self.master)
-                    # self.frame.pack()
-                    
-                    # self.master.title("Menu")
-                    # self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: " )
-                    # self.adicionar_depesas.grid(row=3 , column=1)
-                    # self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: " )
-                    # self.ver_depesas.grid(row=4 , column=1)
-                    # self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:")
-                    # self.orcamento.grid(row=5 , column=1)
-                    #continuar aqui login 
-                else:
-                    messagebox.showinfo("Erro", "Credenciais inválidas")
-                    if self.frame:
-                        self.frame.destroy()
-                        self.frame_inicial()
-
-    def ver_registo(self):
-        if self.password_entry["show"] == "*" and self.password_entry_2["show"] == "*" :
-            self.password_entry["show"] = ""
-            self.password_entry_2["show"] = ""
-        else :
-            self.password_entry["show"] ="*"
-            self.password_entry_2["show"] = "*"
     
-    def ver_login(self):
-        if self.password_entry["show"] == "*":
-            self.password_entry["show"] = ""
-        else:
-            self.password_entry["show"] ="*"
-
     def tamanho_password(self, tamanho):
         if len(tamanho) <= 16 :
             return True
@@ -360,4 +375,3 @@ class View:
         else:
             self.master.bell()  
             return False
-        
