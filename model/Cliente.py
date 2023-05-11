@@ -1,7 +1,7 @@
 from model.Lista.LinkedList import *
 
 class Cliente:
-    def init(self, nome, password, nif):
+    def __init__(self, nome, password, nif):
         self.nome = nome
         self.password = password
         self.nif = nif

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox , ttk
 from model.Cliente import *
 from model.Lista.LinkedList import *
 from model.Lista.Iterador import *
@@ -92,8 +92,122 @@ class View:
         
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_inicial)
         self.voltar_button.grid(row=9, column=0)    #.pack()
+    
+    def frame_menu(self): #frame menu
 
+        if self.frame:
+            self.frame.destroy()
         
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.master.geometry("500x300")
+        self.master.title("Menu")
+        self.master.resizable(False, False)
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+        
+        self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ", command=self.frame_add_despesas)
+        self.adicionar_depesas.grid(row=3 , column=1)#not working
+        self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: ", command = self.frame_ver_despesa )
+        self.ver_depesas.grid(row=5 , column=1)#not working
+        self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:", command= self.frame_ver_orcamento)
+        self.orcamento.grid(row=7 , column=1)#not working
+        
+    def frame_add_despesas(self): #frame add despesas
+
+        if self.frame:
+            self.frame.destroy()
+        
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.master.geometry("500x300")
+        self.master.title("Adicionar Despesas")
+        self.master.resizable(False, False)
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.label = tk.Label(self.frame, text="Categoria da despesa")
+        self.label.grid(row=0, column=0)    #.pack()
+        #self.combo = ttk.Combobox(
+        #    state="readonly",
+        #    values=["Python", "C", "C++", "Java"]
+        #    )
+        #self.combo.grid(row=1, column=0)
+        #self.button = ttk.Button(text="Display selection", command=self.display_selection)
+        #self.combo.place(x = 150 ,y = 25)
+        #self.frame.mainloop()
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=1, column=0, pady=5)   #.pack()
+
+        self.nome_label = tk.Label(self.frame, text="Descrição")
+        self.nome_label.grid(row=3, column=0)   #.pack()
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=4, column=0, pady=5)   #.pack()
+
+        self.nome_label = tk.Label(self.frame, text="Valor da despesa")
+        self.nome_label.grid(row=6, column=0)   #.pack()
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=7, column=0, pady=5)   #.pack()
+
+        self.nome_label = tk.Label(self.frame, text="Data da despesa ")
+        self.nome_label.grid(row=9, column=0)   #.pack()
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=10, column=0, pady=5)   #.pack()
+        
+        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
+        self.voltar_button.grid(row=12, column=0)
+        
+    def frame_ver_despesa(self):    #frame ver despesas
+        if self.frame:
+            self.frame.destroy()
+        
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.master.geometry("500x300")
+        self.master.title("Vizualizar Despesas")
+        self.master.resizable(False, False)
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.name_label = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
+        self.name_label.grid(row=0, column=0)    #.pack()
+    
+    def frame_ver_orcamento(self):
+        if self.frame:
+            self.frame.destroy()
+        
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        self.master.geometry("500x300")
+        self.master.title("Orçamento")
+        self.master.resizable(False, False)
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+        
+        self.nome_label = tk.Label(self.frame, text="Máximo de gastos para o mês")
+        self.nome_label.grid(row=0, column=0)    #.pack()
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=1, column=0)    #.pack()
+
+        self.nome_label = tk.Label(self.frame, text="Orçamento")
+        self.nome_label.grid(row=3, column=0)   #.pack()
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=4, column=0, pady=5)   #.pack()
+        
+        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
+        self.voltar_button.grid(row=6, column=0)
+
+    def display_selection(self):
+    
+        selection = self.combo.get()
+        messagebox.showinfo(
+            message=f"The selected value is: {selection}",
+            title="Selection"
+        )        
     def registar(self):
         nome_registo = self.nome_entry.get()
         password_registo = self.password_entry.get()
@@ -147,10 +261,10 @@ class View:
                 self.frame_registo()
 
         if verificacao_registo == True:
-            cliente = Cliente()
-            cliente.set_nome(nome_registo)
-            cliente.set_password(password_registo)
-            cliente.set_nif(nif)
+            cliente = Cliente(nome_registo,password_registo,nif)
+            #cliente.set_nome(nome_registo)
+            #cliente.set_password(password_registo)
+            #cliente.set_nif(nif)
             self.clientes_lista.append(cliente)
             self.clientes_lista.print_list()
                 
@@ -198,6 +312,20 @@ class View:
                 
                 if cliente_encontrado:
                     messagebox.showinfo("Sucesso", "Login bem-sucedido")
+                    if self.frame:
+                        self.frame.destroy()
+                        self.frame_menu()
+        
+                    # self.frame = tk.Frame(self.master)
+                    # self.frame.pack()
+                    
+                    # self.master.title("Menu")
+                    # self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: " )
+                    # self.adicionar_depesas.grid(row=3 , column=1)
+                    # self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: " )
+                    # self.ver_depesas.grid(row=4 , column=1)
+                    # self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:")
+                    # self.orcamento.grid(row=5 , column=1)
                     #continuar aqui login 
                 else:
                     messagebox.showinfo("Erro", "Credenciais inválidas")
@@ -232,3 +360,4 @@ class View:
         else:
             self.master.bell()  
             return False
+        
