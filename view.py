@@ -7,7 +7,7 @@ from model.Lista.Iterador import *
 class View:
 
     def __init__(self, master):
-    
+        self.clientes_lista = LinkedList()
         self.master = master
         self.master.geometry("500x300")
         self.master.title("Inicio")
@@ -93,7 +93,6 @@ class View:
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_inicial)
         self.voltar_button.grid(row=9, column=0)    #.pack()
 
-
         
     def registar(self):
         nome_registo = self.nome_entry.get()
@@ -105,42 +104,60 @@ class View:
         if len(nome_registo)==0 :
             messagebox.showinfo("Erro", "Complete o nome")
             verificacao_registo = False
+
         if len(password_registo)==0  :
             messagebox.showinfo("Erro", "Complete a password")
             verificacao_registo = False
+
         if len(password_registo_2)==0  :
             messagebox.showinfo("Erro", "Complete a confirmação de password")
             verificacao_registo = False
+
         if password_registo != password_registo_2 and len(password_registo_2)>0 and len(password_registo)>0:
             messagebox.showinfo("Erro", "Passwords diferentes")
             verificacao_registo = False
+
         if len(nif)==0:
             messagebox.showinfo("Erro", "Complete o NIF") 
-            verificacao_registo = False   
+            verificacao_registo = False
+
         if len(password_registo) > 0 and len(password_registo) < 8:
             messagebox.showinfo("Erro", "Password Pequena") 
             verificacao_registo = False
+
         if len(nif) > 0 and len(nif) < 9:
             messagebox.showinfo("Erro", "NIF Pequeno")
             verificacao_registo = False
-        #verificar se o username já existe 
-        #verificar se o nif já existe
+
+        for cliente in self.clientes_lista:
+            if cliente.get_nome() == nome_registo:
+                messagebox.showinfo("Erro", "Nome de registo já existente")
+                verificacao_registo = False
+                break
+
+        for cliente in self.clientes_lista:
+            if cliente.get_nif() == nif:
+                messagebox.showinfo("Erro", "NIF já existente")
+                verificacao_registo = False
+                break
+
+        if verificacao_registo == False:
+            if self.frame:
+                self.frame.destroy()
+                self.frame_registo()
 
         if verificacao_registo == True:
             cliente = Cliente()
-            lista_clientes = LinkedList()
             cliente.set_nome(nome_registo)
             cliente.set_password(password_registo)
             cliente.set_nif(nif)
-            lista_clientes.append(cliente)
-            lista_clientes.print_list()
-            
+            self.clientes_lista.append(cliente)
+            self.clientes_lista.print_list()
+                
             if self.frame:
                 self.frame.destroy()
                 self.frame_inicial()
             
-            #fazer o registo numa linked list
-    
     def login(self):
         username_login = self.nome_entry.get()
         password_login = self.password_entry.get()
@@ -149,19 +166,44 @@ class View:
         if len(username_login)==0 :
             messagebox.showinfo("Erro", "Complete o nome")
             verificacao_login = False
+
         if len(password_login)==0 :
             messagebox.showinfo("Erro", "Complete a password")
             verificacao_login = False
+
         if len(password_login) > 0 and len(password_login) < 8:
             messagebox.showinfo("Erro", "Password Pequena") 
             verificacao_login = False
-        #verificar se o login esta registado
-        #verificar se a password corresponde a do username
-        #verificar se o username está registado
         
+        if verificacao_login == False:
+            if self.frame:
+                self.frame.destroy()
+                self.frame_inicial()
+
         if verificacao_login == True:
-            pass
-            #entrar numa nova janela com os dados do login
+            count = 0
+            for cliente in self.clientes_lista:
+                if cliente != None:
+                    count += 1
+            if count == 0:
+                messagebox.showinfo("Erro", "Não existem Utilizadores Registados") 
+                verificacao_login = False
+            
+            if verificacao_login == True:
+                cliente_encontrado = None
+                for cliente in self.clientes_lista:
+                    if cliente.get_nome() == username_login and cliente.get_password() == password_login:
+                        cliente_encontrado = cliente
+                        break
+                
+                if cliente_encontrado:
+                    messagebox.showinfo("Sucesso", "Login bem-sucedido")
+                    #continuar aqui login 
+                else:
+                    messagebox.showinfo("Erro", "Credenciais inválidas")
+                    if self.frame:
+                        self.frame.destroy()
+                        self.frame_inicial()
 
     def ver_registo(self):
         if self.password_entry["show"] == "*" and self.password_entry_2["show"] == "*" :
@@ -181,12 +223,12 @@ class View:
         if len(tamanho) <= 16 :
             return True
         else:
-            self.master.bell()  # emite um sinal sonoro
+            self.master.bell() 
             return False
     
     def tamanho_nif(self, tamanho):
         if len(tamanho) <= 9:
             return True
         else:
-            self.master.bell()  # emite um sinal sonoro
+            self.master.bell()  
             return False
