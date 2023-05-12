@@ -100,11 +100,12 @@ class View:
                             break
                     
                     if cliente_encontrado:
+                        self.username = username_login
+                        self.password = password_login
                         messagebox.showinfo("Sucesso", "Login bem-sucedido")
-                        if self.frame:
-                            self.username = username_login
-                            self.password = password_encontrada  #Login efetuado- Open Menu frame
-                            self.frame.destroy()
+
+                        if self.frame:                       
+                            self.frame.destroy()    #Login efetuado- Open Menu frame
                             self.frame_menu()
             
                     else:
@@ -338,15 +339,14 @@ class View:
         if verificacao_despesas == True:
             despesa = Despesas(categoria, descricao, valor, data) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
-            self.despesas_lista.print_list_despesas() #função para printar as despesas
             messagebox.showinfo("Sucesso", "Categoria adicionada com sucesso")
             
-            #VER AMANHA!
+            username_atual = self.username
+            password_atual = self.password
+            self.clientes_lista.cliente_logado(username_atual, password_atual)
+            self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data)
+            self.clientes_lista.print_list_cliente_despesas()
 
-            # for cliente in self.clientes_lista:
-            #     if cliente.get_nome() == self.username and cliente.get_password() == self.password:
-            #         pass
-        
             if self.frame:
                 self.frame.destroy()    #destruir a frame
                 self.frame_menu()       #aceder a frame anterior

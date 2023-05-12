@@ -7,7 +7,7 @@ class Cliente:
         self.password = password
         self.nif = nif
         self.lista = None
-        self.despesas = LinkedListDespesas #serve para poder armazenar a linkedlist de despesas na classe cliente
+        self.despesas = LinkedListDespesas() #serve para poder armazenar a linkedlist de despesas na classe cliente
 
     def get_nome(self): #pega nome
         return self.nome

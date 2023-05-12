@@ -1,11 +1,14 @@
 from model.Lista.Nodes import *
 from model.Cliente import *
+from model.Despesas import *
 from view import *
+import os
 
 class LinkedListCliente:
     def __init__(self): #construtor
         self.head = None
         self.tail = None
+        self.cliente_atual = None
 
     def append_cliente(self, value): #adicionar cliente
         new_node = Node(value)
@@ -43,9 +46,55 @@ class LinkedListCliente:
             yield current_node.value
             current_node = current_node.next
 
-    def print_list_cliente(self): #printar ciente
+    def cliente_logado(self, username, password):
         current_node = self.head
         while current_node is not None:
+            if current_node.value.get_nome() == username and current_node.value.get_password() == password:
+                self.cliente_atual = current_node.value
+                print(username)
+                print(password)
+                break
+            current_node = current_node.next
+        else:
+            print("Nome de usuário ou senha incorretos.")
+    
+    def adicionar_despesa_cliente_logado(self, categoria, descricao, valor, data):
+        if self.cliente_atual is None:
+            print("Nenhum cliente está logado.")
+            return
+        nova_despesa = Despesas(categoria, descricao, valor, data)
+        self.cliente_atual.despesas.append_despesas(nova_despesa)
+        print("Despesa adicionada ao cliente:", self.cliente_atual.get_nome())
+    
+    def print_list_cliente_despesas(self):
+        current_node = self.head
+        os.system("cls")
+        print("Utilizadores Registados:")
+        print()
+        while current_node is not None:
+            cliente = current_node.value
+            print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+            print()
+            print("Nome:", cliente.get_nome())
+            print("Password:", cliente.get_password())
+            print("NIF:", cliente.get_nif())
+            print("Despesas:")
+            print()
+            for despesa in cliente.despesas:
+                print("  Categoria:", despesa.get_categoria())
+                print("  Descrição:", despesa.get_descricao())
+                print("  Valor:", despesa.get_valor())
+                print("  Data:", despesa.get_data())
+                print()
+            current_node = current_node.next
+    
+    def print_list_cliente(self): #printar ciente
+        current_node = self.head
+        os.system("cls")
+        print("Utilizadores Registados:")
+        print()
+        while current_node is not None:
+            cliente = current_node.value
             print("Nome:", current_node.value.get_nome())
             print("Password:", current_node.value.get_password())
             print("NIF:", current_node.value.get_nif())
