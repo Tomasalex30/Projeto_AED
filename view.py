@@ -335,9 +335,9 @@ class View:
         data = self.data_entry.get() #valor entry data
 
         verificacao_despesas = True
-        if self.orcamento == None:
-            messagebox.showinfo("Erro", "Não existe Orçamento") #verificacao mensagem longa 
-            verificacao_despesas = False
+        # if self.orcamento == None:
+        #     messagebox.showinfo("Erro", "Não existe Orçamento") #verificacao mensagem longa 
+        #     verificacao_despesas = False
         if len(descricao) > 160:
             messagebox.showinfo("Erro", "Descrição demasiado longa!") #verificacao mensagem longa 
             verificacao_despesas = False

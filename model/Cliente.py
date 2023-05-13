@@ -30,6 +30,3 @@ class Cliente:
     def set_lista(self, nova_lista): #mete lista
         self.lista = nova_lista
 
-    def obter_count_orcamento(self):
-        return self.count_orcamento
-
