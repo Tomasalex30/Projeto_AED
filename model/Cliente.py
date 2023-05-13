@@ -8,6 +8,7 @@ class Cliente:
         self.nif = nif
         self.lista = None
         self.despesas = LinkedListDespesas() #serve para poder armazenar a linkedlist de despesas na classe cliente
+        self.orcamento = LinkedListDespesas()
 
     def get_nome(self): #pega nome
         return self.nome
@@ -28,4 +29,7 @@ class Cliente:
         return self.lista
     def set_lista(self, nova_lista): #mete lista
         self.lista = nova_lista
+
+    def obter_count_orcamento(self):
+        return self.count_orcamento
 

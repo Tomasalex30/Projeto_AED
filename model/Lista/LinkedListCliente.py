@@ -1,6 +1,7 @@
 from model.Lista.Nodes import *
 from model.Cliente import *
 from model.Despesas import *
+from model.Orcamento import *
 from view import *
 import os
 
@@ -51,21 +52,38 @@ class LinkedListCliente:
         while current_node is not None:
             if current_node.value.get_nome() == username and current_node.value.get_password() == password:
                 self.cliente_atual = current_node.value
-                print(username)
-                print(password)
                 break
             current_node = current_node.next
         else:
-            print("Nome de usuário ou senha incorretos.")
+            return False
     
     def adicionar_despesa_cliente_logado(self, categoria, descricao, valor, data):
         if self.cliente_atual is None:
-            print("Nenhum cliente está logado.")
             return
         nova_despesa = Despesas(categoria, descricao, valor, data)
         self.cliente_atual.despesas.append_despesas(nova_despesa)
         print("Despesa adicionada ao cliente:", self.cliente_atual.get_nome())
+
+    def adicionar_orcamento_cliente_logado(self, gastos_mes, orcamento, count_orcamento):
+        if self.cliente_atual is None:
+            return
+        novo_orcamento = Orcamento(gastos_mes, orcamento, count_orcamento)
+        self.cliente_atual.orcamento.append_orcamento(novo_orcamento)
+        print("Despesa adicionada ao cliente:", self.cliente_atual.get_nome())
     
+    def print_list_cliente(self): #printar ciente
+            current_node = self.head
+            os.system("cls")
+            print("Utilizadores Registados:")
+            print()
+            while current_node is not None:
+                cliente = current_node.value
+                print("Nome:", current_node.value.get_nome())
+                print("Password:", current_node.value.get_password())
+                print("NIF:", current_node.value.get_nif())
+                print()
+                current_node = current_node.next
+
     def print_list_cliente_despesas(self):
         current_node = self.head
         os.system("cls")
@@ -78,6 +96,7 @@ class LinkedListCliente:
             print("Nome:", cliente.get_nome())
             print("Password:", cliente.get_password())
             print("NIF:", cliente.get_nif())
+            print()
             print("Despesas:")
             print()
             for despesa in cliente.despesas:
@@ -88,15 +107,34 @@ class LinkedListCliente:
                 print()
             current_node = current_node.next
     
-    def print_list_cliente(self): #printar ciente
+    def print_list_cliente_despesas_orcamento(self):
         current_node = self.head
         os.system("cls")
         print("Utilizadores Registados:")
         print()
         while current_node is not None:
             cliente = current_node.value
-            print("Nome:", current_node.value.get_nome())
-            print("Password:", current_node.value.get_password())
-            print("NIF:", current_node.value.get_nif())
+            print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
             print()
+            print("Nome:", cliente.get_nome())
+            print("Password:", cliente.get_password())
+            print("NIF:", cliente.get_nif())
+            print()
+            print("Despesas:")
+            print()
+            for despesa in cliente.despesas:
+                print("  Categoria:", despesa.get_categoria())
+                print("  Descrição:", despesa.get_descricao())
+                print("  Valor:", despesa.get_valor())
+                print("  Data:", despesa.get_data())
+                print()
+            print("Orçamento:")
+            print()
+            for orcamento in cliente.orcamento:
+                print("  Count:", orcamento.get_count_orcamento())
+                print("  Orçamento:", orcamento.get_orcamento())
+                print("  Gastos para o mês", orcamento.get_gastos_mes())
+                print()
             current_node = current_node.next
+    
+    

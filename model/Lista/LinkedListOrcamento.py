@@ -4,12 +4,12 @@ from model.Despesas import *
 from model.Orcamento import *
 from view import *
 
-class LinkedListDespesas:
+class LinkedListOrcamento:
     def __init__(self): #construtores
         self.head = None
         self.tail = None
 
-    def append_despesas(self, value): #adicionar despesas
+    def append_orcamento(self, value): #adicionar despesas
         new_node = Node(value)
         if self.head is None:
             self.head = new_node
@@ -21,19 +21,8 @@ class LinkedListDespesas:
             current_node.next = new_node
             new_node.prev = current_node
             self.tail = new_node
-    
-    def append_orcamento(self, value):
-        new_node = Node(value)
-        if self.head is None:
-            self.head = new_node
-        else:
-            current_node = self.head
-            while current_node.next is not None:
-                current_node = current_node.next
-            current_node.next = new_node
-            new_node.prev = current_node
 
-    def remove_despesas(self, value): #remover despesas
+    def remove_orcamento(self, value): #remover despesas
         if self.head is None:
             return
         current_node = self.head
@@ -56,12 +45,10 @@ class LinkedListDespesas:
             yield current_node.value
             current_node = current_node.next
 
-    def print_list_despesas(self): #printar despesas
+    def print_list_orcamento(self): #printar despesas
         current_node = self.head
         while current_node is not None:
-            print("Categoria:", current_node.value.get_categoria())
-            print("Descrição", current_node.value.get_descricao())
-            print("Valor", current_node.value.get_valor())
-            print("Data", current_node.value.get_data())
+            print("Gastos para o mês:", current_node.value.get_gastos_mes())
+            print("Orçamento", current_node.value.get_orcamento())
             print()
             current_node = current_node.next

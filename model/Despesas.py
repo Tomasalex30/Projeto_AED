@@ -3,7 +3,7 @@ from model.Lista.LinkedListCliente import *
 class Despesas:
     def __init__(self, categoria, descricao, valor, data):
         self.categoria = categoria
-        self.descricao =descricao 
+        self.descricao = descricao 
         self.valor = valor
         self.data = data
         
@@ -26,3 +26,6 @@ class Despesas:
         return self.descricao
     def set_data(self, nova_data): #mete data
         self.data = nova_data
+
+
+    

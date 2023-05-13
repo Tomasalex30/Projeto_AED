@@ -1,11 +1,14 @@
 import tkinter as tk
 import re
 from tkinter import messagebox , ttk
-from model.Cliente import *
+from model.Cliente import * 
+from model.Despesas import *
+from model.Orcamento import *
 from model.Lista.LinkedListDespesas import *
 from model.Lista.LinkedListCliente import *
+from model.Lista.LinkedListOrcamento import *
 from model.Lista.Iterador import *
-from model.Despesas import *
+
 from tkcalendar import DateEntry  #fazer pip install tkcalendar no terminal
 
 
@@ -13,6 +16,7 @@ class View:
     def __init__(self, master):
         self.clientes_lista = LinkedListCliente()
         self.despesas_lista = LinkedListDespesas()
+        self.orcamento_lista = LinkedListOrcamento()
         self.master = master
         self.master.geometry("500x300")
         self.master.title("Inicio")
@@ -23,6 +27,9 @@ class View:
         self.frame_login()
         self.username = None
         self.password = None 
+        self.orcamento = None
+        self.gastos_mes = None
+        self.count_orcamento = 0
     
     def frame_login(self):   #frame login 
         if self.frame:
@@ -272,7 +279,7 @@ class View:
 
         self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login) #botao voltar
         self.sign_out.grid(row=9 , column=1)#not working
-        
+    
     def frame_adicionar_despesas(self): #frame add despesas
         if self.frame:
             self.frame.destroy()
@@ -307,7 +314,6 @@ class View:
         self.valor_label.grid(row=2, column=0)
         self.valor_entry = tk.Entry(self.frame) #entry valor
         self.valor_entry.grid(row=2, column=1, pady=5)
-
         valor_numerico = self.master.register(self.verificar_numerico) #verificacao para apenas escrever numerico e .
         self.valor_entry.config(validate="key", validatecommand=(valor_numerico, "%P"))
 
@@ -329,15 +335,25 @@ class View:
         data = self.data_entry.get() #valor entry data
 
         verificacao_despesas = True
+        if self.orcamento == None:
+            messagebox.showinfo("Erro", "Não existe Orçamento") #verificacao mensagem longa 
+            verificacao_despesas = False
         if len(descricao) > 160:
             messagebox.showinfo("Erro", "Descrição demasiado longa!") #verificacao mensagem longa 
+            verificacao_despesas = False
+        if len(descricao) == 0:
+            messagebox.showinfo("Erro", "Complete a descrição")
+            verificacao_despesas = False
+        if len(valor) == 0:
+            messagebox.showinfo("Erro", "Defina o valor")
             verificacao_despesas = False
         if categoria == "Selecione a Categoria": #verificacao categoria invalida
             messagebox.showinfo("Erro", "Categoria Inválida")
             verificacao_despesas = False
 
         if verificacao_despesas == True:
-            despesa = Despesas(categoria, descricao, valor, data) #adicionar as despesas na classe Despesa
+            valor_final_verificacao = float(valor)
+            despesa = Despesas(categoria, descricao, valor_final_verificacao, data) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
             messagebox.showinfo("Sucesso", "Categoria adicionada com sucesso")
             
@@ -345,7 +361,7 @@ class View:
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data)
-            self.clientes_lista.print_list_cliente_despesas()
+            self.clientes_lista.print_list_cliente_despesas_orcamento()
 
             if self.frame:
                 self.frame.destroy()    #destruir a frame
@@ -380,21 +396,61 @@ class View:
         self.frame = tk.Frame(self.master)
         self.frame.pack()
         
-        self.gastos_label = tk.Label(self.frame, text="Máximo de gastos para o mês") #label para os gastos
+        self.gastos_label = ttk.Label(self.frame, text="Máximo de gastos para o mês") #gastos label
         self.gastos_label.grid(row=0, column=0)
-        self.gastos_entry = tk.Entry(self.frame)   #entrada para os gastos
-        self.gastos_entry.grid(row=1, column=0)    
+        self.gastos_entry = tk.Entry(self.frame) #entry gastos
+        self.gastos_entry.grid(row=1, column=0, pady=5)
+        valor_numerico_gastos = self.master.register(self.verificar_numerico) #verificacao para apenas escrever numerico e .
+        self.gastos_entry.config(validate="key", validatecommand=(valor_numerico_gastos, "%P"))    
 
-        self.orcamento_label = tk.Label(self.frame, text="Orçamento") #label para o orçamento
-        self.orcamento_label.grid(row=3, column=0)   
-        self.orcamento_entry = tk.Entry(self.frame) #entry para orcamento
-        self.orcamento_entry.grid(row=4, column=0, pady=5)   
+        self.orcamento_label = ttk.Label(self.frame, text="Orçamento") #orcamento label
+        self.orcamento_label.grid(row=2, column=0)
+        self.orcamento_entry = tk.Entry(self.frame) #orcamento valor
+        self.orcamento_entry.grid(row=3, column=0, pady=5)
+        valor_numerico_orcamento = self.master.register(self.verificar_numerico) #verificacao para apenas escrever numerico e .
+        self.orcamento_entry.config(validate="key", validatecommand=(valor_numerico_orcamento, "%P"))  
         
-        self.definir_orc_button = tk.Button(self.frame, text="DEFINIR", command="") #botao para definir orçamento
-        self.definir_orc_button.grid(row=6, column=0)
+        self.definir_orc_button = tk.Button(self.frame, text="DEFINIR", command=self.definir_orcamento) #botao para definir orçamento
+        self.definir_orc_button.grid(row=4, column=0)
 
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
-        self.voltar_button.grid(row=7, column=0)
+        self.voltar_button.grid(row=5, column=0)
+
+    def definir_orcamento(self):
+        gastos_mes = self.gastos_entry.get()
+        orcamento = self.orcamento_entry.get()
+
+        verificacao_orcamento = True
+        if gastos_mes > orcamento:
+            messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
+            verificacao_orcamento = False
+        if self.count_orcamento > 0:
+            messagebox.showinfo("Erro", "O orçamento já foi definido")
+            verificacao_orcamento = False
+        if len(gastos_mes) == 0:
+            messagebox.showinfo("Erro", "Defina os gastos para o mês")
+            verificacao_orcamento = False
+        if len(orcamento) == 0:
+            messagebox.showinfo("Erro", "Defina o orçamento")
+            verificacao_orcamento = False
+    
+        if verificacao_orcamento == True:
+            gastos_mes_final_verificacao = float(gastos_mes)
+            orcamento_final_verificacao = float(orcamento)
+            self.count_orcamento += 1
+            orcamento_final = Orcamento(gastos_mes_final_verificacao, orcamento_final_verificacao, self.count_orcamento) #adicionar as despesas na classe Despesa
+            self.despesas_lista.append_orcamento(orcamento_final) #adicionar as despesas na linked list
+            messagebox.showinfo("Sucesso", "Conjunto Orçamento feito com Sucesso")
+            
+            username_atual = self.username
+            password_atual = self.password
+            self.clientes_lista.cliente_logado(username_atual, password_atual)
+            self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento, self.count_orcamento)
+            self.clientes_lista.print_list_cliente_despesas_orcamento()
+
+            if self.frame:
+                self.frame.destroy()    #destruir a frame
+                self.frame_menu()  
     
     def tamanho_password(self, tamanho):    #função que serve para verificar o tamaho da password
         if len(tamanho) <= 16 :
