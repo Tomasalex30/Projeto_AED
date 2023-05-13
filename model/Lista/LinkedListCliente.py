@@ -56,7 +56,7 @@ class LinkedListCliente:
             current_node = current_node.next
         else:
             return False
-    
+
     def adicionar_despesa_cliente_logado(self, categoria, descricao, valor, data):
         if self.cliente_atual is None:
             return

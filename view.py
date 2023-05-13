@@ -424,9 +424,6 @@ class View:
         if gastos_mes > orcamento:
             messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
             verificacao_orcamento = False
-        if self.count_orcamento > 0:
-            messagebox.showinfo("Erro", "O orçamento já foi definido")
-            verificacao_orcamento = False
         if len(gastos_mes) == 0:
             messagebox.showinfo("Erro", "Defina os gastos para o mês")
             verificacao_orcamento = False
@@ -435,15 +432,16 @@ class View:
             verificacao_orcamento = False
     
         if verificacao_orcamento == True:
+            self.count_orcamento += 1
             gastos_mes_final_verificacao = float(gastos_mes)
             orcamento_final_verificacao = float(orcamento)
-            self.count_orcamento += 1
             orcamento_final = Orcamento(gastos_mes_final_verificacao, orcamento_final_verificacao, self.count_orcamento) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_orcamento(orcamento_final) #adicionar as despesas na linked list
             messagebox.showinfo("Sucesso", "Conjunto Orçamento feito com Sucesso")
             
             username_atual = self.username
             password_atual = self.password
+
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento, self.count_orcamento)
             self.clientes_lista.print_list_cliente_despesas_orcamento()
