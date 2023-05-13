@@ -9,6 +9,7 @@ class Cliente:
         self.lista = None
         self.despesas = LinkedListDespesas() #serve para poder armazenar a linkedlist de despesas na classe cliente
         self.orcamento = LinkedListDespesas()
+        self.orcamento_count = 0
 
     def get_nome(self): #pega nome
         return self.nome

@@ -356,7 +356,6 @@ class View:
             valor_final_verificacao = float(valor)
             despesa = Despesas(categoria, descricao, valor_final_verificacao, data) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
-            messagebox.showinfo("Sucesso", "Categoria adicionada com sucesso")
             
             username_atual = self.username
             password_atual = self.password
@@ -470,18 +469,17 @@ class View:
                 verificacao_orcamento = False
         
         if verificacao_orcamento == True:
-            self.count_orcamento += 1
             gastos_mes_final_verificacao = float(gastos_mes)
             orcamento_final_verificacao = float(orcamento)
-            orcamento_final = Orcamento(gastos_mes_final_verificacao, orcamento_final_verificacao, self.count_orcamento) #adicionar as despesas na classe Despesa
+            orcamento_final = Orcamento(gastos_mes_final_verificacao, orcamento_final_verificacao) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_orcamento(orcamento_final) #adicionar as despesas na linked list
-            messagebox.showinfo("Sucesso", "Conjunto Orçamento feito com Sucesso")
             
             username_atual = self.username
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
-            self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento, self.count_orcamento)
+            self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento)
             self.clientes_lista.print_list_cliente_despesas_orcamento()
+        
 
             if self.frame:
                 self.frame.destroy()    #destruir a frame

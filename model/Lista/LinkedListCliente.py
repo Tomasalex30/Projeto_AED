@@ -60,16 +60,23 @@ class LinkedListCliente:
     def adicionar_despesa_cliente_logado(self, categoria, descricao, valor, data):
         if self.cliente_atual is None:
             return
+        if self.cliente_atual.orcamento_count == 0:
+            messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")
+            return
         nova_despesa = Despesas(categoria, descricao, valor, data)
         self.cliente_atual.despesas.append_despesas(nova_despesa)
-        print("Despesa adicionada ao cliente:", self.cliente_atual.get_nome())
+        messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
 
-    def adicionar_orcamento_cliente_logado(self, gastos_mes, orcamento, count_orcamento):
+    def adicionar_orcamento_cliente_logado(self, gastos_mes, orcamento):
         if self.cliente_atual is None:
             return
-        novo_orcamento = Orcamento(gastos_mes, orcamento, count_orcamento)
+        if self.cliente_atual.orcamento_count > 0:
+            messagebox.showinfo("Erro", "O cliente já possui um orçamento.")
+            return
+        novo_orcamento = Orcamento(gastos_mes, orcamento)
         self.cliente_atual.orcamento.append_orcamento(novo_orcamento)
-        print("Despesa adicionada ao cliente:", self.cliente_atual.get_nome())
+        self.cliente_atual.orcamento_count += 1
+        messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
     
     def print_list_cliente(self): #printar ciente
             current_node = self.head
@@ -131,9 +138,8 @@ class LinkedListCliente:
             print("Orçamento:")
             print()
             for orcamento in cliente.orcamento:
-                print("  Count:", orcamento.get_count_orcamento())
                 print("  Orçamento:", orcamento.get_orcamento())
-                print("  Gastos para o mês", orcamento.get_gastos_mes())
+                print("  Gastos para o mês:", orcamento.get_gastos_mes())
                 print()
             current_node = current_node.next
     
