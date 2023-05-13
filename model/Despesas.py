@@ -23,9 +23,7 @@ class Despesas:
         self.valor = novo_valor
 
     def get_data(self): #pega data
-        return self.descricao
+        return self.data
     def set_data(self, nova_data): #mete data
         self.data = nova_data
-
-
     

@@ -10,7 +10,6 @@ from model.Lista.LinkedListDespesas import *
 from model.Lista.LinkedListCliente import *
 from model.Lista.LinkedListOrcamento import *
 from model.Lista.Iterador import *
-
 from tkcalendar import DateEntry  #fazer pip install tkcalendar no terminal
 
 
@@ -456,9 +455,6 @@ class View:
         orcamento = self.orcamento_entry.get()
 
         verificacao_orcamento = True
-        if gastos_mes < orcamento:
-            messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
-            verificacao_orcamento = False
         if len(gastos_mes) == 0:
             messagebox.showinfo("Erro", "Defina os gastos para o mês")
             verificacao_orcamento = False
@@ -466,6 +462,13 @@ class View:
             messagebox.showinfo("Erro", "Defina o orçamento")
             verificacao_orcamento = False
     
+        if verificacao_orcamento == True:
+            gastos_mes_final_verificacao = float(gastos_mes)
+            orcamento_final_verificacao = float(orcamento)
+            if gastos_mes_final_verificacao > orcamento_final_verificacao:
+                messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
+                verificacao_orcamento = False
+        
         if verificacao_orcamento == True:
             self.count_orcamento += 1
             gastos_mes_final_verificacao = float(gastos_mes)
@@ -476,7 +479,6 @@ class View:
             
             username_atual = self.username
             password_atual = self.password
-
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento, self.count_orcamento)
             self.clientes_lista.print_list_cliente_despesas_orcamento()
