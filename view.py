@@ -1,5 +1,7 @@
 import tkinter as tk
 import re
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import messagebox , ttk
 from model.Cliente import * 
 from model.Despesas import *
@@ -381,8 +383,41 @@ class View:
         self.frame.pack()
 
         self.name_label = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
-        self.name_label.grid(row=0, column=0)    
-    
+        self.name_label.grid(row=10, column=5) 
+        self.name_label = tk.Button(self.frame, text="VER GRAFICO", command=self.ver_grafico) #botao ver gráfico
+        self.name_label.grid(row=10, column=0)    
+   
+    def ver_grafico(self):         #frame ver gráfico
+        if self.frame:
+            self.frame.destroy()
+
+        self.master.geometry("600x600")
+        self.master.title("Vizualizar Gráfico")
+        self.master.resizable(False, False)
+        self.frame = tk.Frame(self.master)
+        self.frame.pack()
+
+        # Coordenadas do gráfico
+        x_values = [2, 3, 1]
+        y_values = [1, 2, 3]
+
+        # Ordenar as coordenadas com base nos valores de x
+        sorted_coordinates = sorted(zip(x_values, y_values), key=lambda coord: coord[0])
+        x_values, y_values = zip(*sorted_coordinates)
+
+        # Crie o gráfico com o Matplotlib
+        fig, ax = plt.subplots()
+        ax.plot(x_values, y_values, '-o', color='red')
+
+        # Crie um objeto do canvas do Matplotlib e incorpore-o no widget Canvas do Tkinter
+        canvas = FigureCanvasTkAgg(fig, master=self.frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        # Adicione um botão "Sair" que permita ao usuário encerrar o programa
+        self.name_label = tk.Button(self.frame, text="VOLTAR", command=self.frame_ver_despesa) #botao voltar
+        self.name_label.pack()
+            
     def frame_ver_orcamento(self): #frame ver orçamento
         if self.frame:
             self.frame.destroy()    #eliminar a frame
@@ -421,7 +456,7 @@ class View:
         orcamento = self.orcamento_entry.get()
 
         verificacao_orcamento = True
-        if gastos_mes > orcamento:
+        if gastos_mes < orcamento:
             messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
             verificacao_orcamento = False
         if len(gastos_mes) == 0:
