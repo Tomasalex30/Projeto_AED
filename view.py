@@ -30,6 +30,9 @@ class View:
         self.password = None 
         self.orcamento = None
         self.gastos_mes = None
+        self.orcamento_final_verificacao = None
+        self.valor_final_verificacao = None
+        self.gastos_mes_final_verificacao = None
         self.count_orcamento = 0
     
     def frame_login(self):   #frame login 
@@ -351,10 +354,16 @@ class View:
         if categoria == "Selecione a Categoria": #verificacao categoria invalida
             messagebox.showinfo("Erro", "Categoria Inválida")
             verificacao_despesas = False
+        
+        if verificacao_despesas ==  True:
+            self.valor_final_verificacao = float(valor)
+            if self.valor_final_verificacao > self.orcamento_final_verificacao:
+                messagebox.showinfo("Erro", "Despesa Demasiado Cara")
+                verificacao_despesas = False
 
         if verificacao_despesas == True:
-            valor_final_verificacao = float(valor)
-            despesa = Despesas(categoria, descricao, valor_final_verificacao, data) #adicionar as despesas na classe Despesa
+            self.valor_final_verificacao = float(valor)
+            despesa = Despesas(categoria, descricao, self.valor_final_verificacao, data) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
             
             username_atual = self.username
@@ -462,16 +471,16 @@ class View:
             verificacao_orcamento = False
     
         if verificacao_orcamento == True:
-            gastos_mes_final_verificacao = float(gastos_mes)
-            orcamento_final_verificacao = float(orcamento)
-            if gastos_mes_final_verificacao > orcamento_final_verificacao:
+            self.gastos_mes_final_verificacao = float(gastos_mes)
+            self.orcamento_final_verificacao = float(orcamento)
+            if self.gastos_mes_final_verificacao > self.orcamento_final_verificacao:
                 messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
                 verificacao_orcamento = False
         
         if verificacao_orcamento == True:
-            gastos_mes_final_verificacao = float(gastos_mes)
-            orcamento_final_verificacao = float(orcamento)
-            orcamento_final = Orcamento(gastos_mes_final_verificacao, orcamento_final_verificacao) #adicionar as despesas na classe Despesa
+            self.gastos_mes_final_verificacao = float(gastos_mes)
+            self.orcamento_final_verificacao = float(orcamento)
+            orcamento_final = Orcamento(self.gastos_mes_final_verificacao, self.orcamento_final_verificacao) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_orcamento(orcamento_final) #adicionar as despesas na linked list
             
             username_atual = self.username
@@ -480,7 +489,6 @@ class View:
             self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento)
             self.clientes_lista.print_list_cliente_despesas_orcamento()
         
-
             if self.frame:
                 self.frame.destroy()    #destruir a frame
                 self.frame_menu()  

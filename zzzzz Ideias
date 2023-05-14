@@ -4,5 +4,5 @@ Ideias que podemos fazer para deixar o projeto mais completo:
     Remover Orçamento
     Ver a data da categoria esta a dar outuput errado
     Alterar os nomes das Categorias
-    bug de orcamento ao dar sign_out - pois count = 1 ----> percorrer a linked list do cliente atual e pegar o valor do count
     categoria nao pode ser adicionada sem que hgaja orcamento
+    subtração de orcamento - categoria
