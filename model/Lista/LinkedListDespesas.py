@@ -65,3 +65,11 @@ class LinkedListDespesas:
             print("Data", current_node.value.get_data())
             print()
             current_node = current_node.next
+
+    def sum_despesas(self):
+        total = 0
+        current_node = self.head
+        while current_node is not None:
+            total += current_node.value.get_valor()
+            current_node = current_node.next
+        return total

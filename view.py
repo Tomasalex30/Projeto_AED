@@ -283,7 +283,10 @@ class View:
 
         self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login) #botao voltar
         self.sign_out.grid(row=9 , column=1)#not working
-    
+
+        self.sign_out = tk.Button(self.frame ,  text= "ELIMINAR CONTA", command= self.eliminar_conta) #botao voltar
+        self.sign_out.grid(row=10 , column=1)#not working
+
     def frame_adicionar_despesas(self): #frame add despesas
         if self.frame:
             self.frame.destroy()
@@ -461,6 +464,8 @@ class View:
     def definir_orcamento(self):
         gastos_mes = self.gastos_entry.get()
         orcamento = self.orcamento_entry.get()
+        valor_despezas = self.despesas_lista.sum_despesas()
+        orcamento_tempo_real = gastos_mes - valor_despezas
 
         verificacao_orcamento = True
         if len(gastos_mes) == 0:
@@ -492,7 +497,20 @@ class View:
             if self.frame:
                 self.frame.destroy()    #destruir a frame
                 self.frame_menu()  
-    
+                
+    def eliminar_conta(self):
+        linked_list_cliente = LinkedListCliente()
+# ... assume the linked list has been populated with some clients
+
+# Set the current client to the desired client
+        current_client = linked_list_cliente.cliente_logado()
+
+# Remove the current client from the linked list
+        linked_list_cliente.remove_cliente(linked_list_cliente.cliente_atual)
+        if self.frame:
+            self.frame.destroy()              #Destruicao da frame
+            self.frame_login()
+        
     def tamanho_password(self, tamanho):    #função que serve para verificar o tamaho da password
         if len(tamanho) <= 16 :
             return True
