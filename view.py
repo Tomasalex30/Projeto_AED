@@ -355,6 +355,8 @@ class View:
             messagebox.showinfo("Erro", "Categoria Inválida")
             verificacao_despesas = False
 
+
+
         if verificacao_despesas == True:
             self.valor_final_verificacao = float(valor)
             despesa = Despesas(categoria, descricao, self.valor_final_verificacao, data) #adicionar as despesas na classe Despesa
@@ -363,8 +365,11 @@ class View:
             username_atual = self.username
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
-            self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data)
-            self.clientes_lista.print_list_cliente_despesas_orcamento()
+            if self.clientes_lista.verificar_orcamento() != 1:
+                self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data)
+                self.clientes_lista.print_list_cliente_despesas_orcamento()
+            else:
+                return
 
             if self.frame:
                 self.frame.destroy()    #destruir a frame
