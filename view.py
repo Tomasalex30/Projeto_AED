@@ -367,25 +367,39 @@ class View:
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             if self.clientes_lista.verificar_orcamento() != 1:
                 gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))
-                if self.valor_final_verificacao <= gastos_mes_cliente_atual:
-                    total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                    resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                    if self.valor_final_verificacao + total_despesas_cliente_atual <= gastos_mes_cliente_atual:
-                        if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
-                            self.clientes_lista.print_list_cliente_despesas_orcamento()
-                            total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                            resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                            print()
-                            print(total_despesas_cliente_atual)
-                            print(resto_gastos_mes)
-                            messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
-
-                            if resto_gastos_mes == 0:
-                                messagebox.showinfo("Aviso", "Gastos do mês esgotados") 
+                orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))
+                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
+                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
+                if resto_gastos_mes != 0:
+                    if self.valor_final_verificacao <= resto_gastos_mes:
+                        if self.valor_final_verificacao + total_despesas_cliente_atual <= gastos_mes_cliente_atual:
+                            if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
+                                self.clientes_lista.print_list_cliente_despesas_orcamento()
+                                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
+                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
+                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+                                print()
+                                print("Total Despesas", total_despesas_cliente_atual)
+                                print("Resto dos gastos do mes",resto_gastos_mes)
+                                print("Resto orcamento", resto_orcamento)
+                                messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
+                                
+                                if resto_gastos_mes == 0:
+                                    messagebox.showinfo("Aviso", "Gastos do mês esgotados")
+                                elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
+                                    messagebox.showinfo("Aviso", f"Ultrapassou os 10% dos seus gastos do mes")
+                                elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
+                                    messagebox.showinfo("Aviso", f"Ultrapassou os 25% dos seus gastos do mes")
+                                elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
+                                    messagebox.showinfo("Aviso", f"Ultrapassou os 50% dos seus gastos do mes")  
+                                elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
+                                    messagebox.showinfo("Aviso", f"Ultrapassou os 75% dos seus gastos do mes")  
+                        else:
+                            messagebox.showinfo("Erro", "Despesa vai exceder os gastos do mês")
                     else:
-                        messagebox.showinfo("Erro", "Despesa vai exceder os gastos do mês") 
+                        messagebox.showinfo("Erro", "Despesa maior que os gastos do mês") 
                 else:
-                  messagebox.showinfo("Erro", "Despesa maior que os gastos do mês")   
+                    messagebox.showinfo("Erro", "Os gastos mensais chegaram ao limite")    
             else:
                 messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")
 
