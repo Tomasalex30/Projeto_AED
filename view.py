@@ -366,10 +366,11 @@ class View:
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             if self.clientes_lista.verificar_orcamento() != 1:
-                self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data)
-                self.clientes_lista.print_list_cliente_despesas_orcamento()
+                if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
+                    self.clientes_lista.print_list_cliente_despesas_orcamento()
+                    messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")   
             else:
-                return
+                messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")
 
             if self.frame:
                 self.frame.destroy()    #destruir a frame
@@ -488,9 +489,12 @@ class View:
             username_atual = self.username
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
-            self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento)
-            self.clientes_lista.print_list_cliente_despesas_orcamento()
-        
+            if self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento) == 1:
+                messagebox.showinfo("Erro", "O cliente já possui um orçamento.")    
+            else:
+                self.clientes_lista.print_list_cliente_despesas_orcamento()
+                messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
+
             if self.frame:
                 self.frame.destroy()    #destruir a frame
                 self.frame_menu()  
