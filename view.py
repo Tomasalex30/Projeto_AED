@@ -306,7 +306,7 @@ class View:
         self.combo = ttk.Combobox( #biblioteca para metodo de seleção
             self.frame,
             state="readonly",
-            values=["Selecione a Categoria", "a", "b", "c", "d"]  #valores da categoria a escolher
+            values=["Selecione a Categoria", "Alimentação", "Lazer", "Habitação", "Outros"]  #valores da categoria a escolher
         )
 
         self.combo.grid(row=0, column=1)
@@ -342,9 +342,6 @@ class View:
         data = self.data_entry.get() #valor entry data
 
         verificacao_despesas = True
-        # if self.orcamento == None:
-        #     messagebox.showinfo("Erro", "Não existe Orçamento") #verificacao mensagem longa 
-        #     verificacao_despesas = False
         if len(descricao) > 160:
             messagebox.showinfo("Erro", "Descrição demasiado longa!") #verificacao mensagem longa 
             verificacao_despesas = False
@@ -357,12 +354,6 @@ class View:
         if categoria == "Selecione a Categoria": #verificacao categoria invalida
             messagebox.showinfo("Erro", "Categoria Inválida")
             verificacao_despesas = False
-        
-        if verificacao_despesas ==  True:
-            self.valor_final_verificacao = float(valor)
-            if self.valor_final_verificacao > self.orcamento_final_verificacao:
-                messagebox.showinfo("Erro", "Despesa Demasiado Cara")
-                verificacao_despesas = False
 
         if verificacao_despesas == True:
             self.valor_final_verificacao = float(valor)
@@ -464,8 +455,8 @@ class View:
     def definir_orcamento(self):
         gastos_mes = self.gastos_entry.get()
         orcamento = self.orcamento_entry.get()
-        valor_despezas = self.despesas_lista.sum_despesas()
-        orcamento_tempo_real = gastos_mes - valor_despezas
+        # valor_despezas = self.despesas_lista.sum_despesas()
+        # orcamento_tempo_real = gastos_mes - valor_despezas
 
         verificacao_orcamento = True
         if len(gastos_mes) == 0:
@@ -485,6 +476,7 @@ class View:
         if verificacao_orcamento == True:
             self.gastos_mes_final_verificacao = float(gastos_mes)
             self.orcamento_final_verificacao = float(orcamento)
+
             orcamento_final = Orcamento(self.gastos_mes_final_verificacao, self.orcamento_final_verificacao) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_orcamento(orcamento_final) #adicionar as despesas na linked list
             
@@ -500,12 +492,7 @@ class View:
                 
     def eliminar_conta(self):
         linked_list_cliente = LinkedListCliente()
-# ... assume the linked list has been populated with some clients
-
-# Set the current client to the desired client
         current_client = linked_list_cliente.cliente_logado()
-
-# Remove the current client from the linked list
         linked_list_cliente.remove_cliente(linked_list_cliente.cliente_atual)
         if self.frame:
             self.frame.destroy()              #Destruicao da frame
