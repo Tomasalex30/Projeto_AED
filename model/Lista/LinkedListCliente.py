@@ -56,6 +56,36 @@ class LinkedListCliente:
             current_node = current_node.next
         else:
             return False
+        
+    
+    def calcular_total_despesas_cliente_atual(slef, lista_clientes):
+        if lista_clientes.cliente_atual is None:
+            return None
+        total_despesas = 0
+        despesas_cliente_atual = lista_clientes.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        while current_node is not None:
+            valor_despesa = float(current_node.value.get_valor())
+            total_despesas += valor_despesa
+            current_node = current_node.next
+        lista_clientes.cliente_atual.total_despesas = total_despesas
+        return total_despesas
+            
+    def encontrar_gastos_mes_cliente_atual(self, clientes_lista):
+        if clientes_lista.cliente_atual is None:
+            return None
+        orcamento = clientes_lista.cliente_atual.orcamento.head
+        if orcamento is not None:
+            return orcamento.value.get_gastos_mes()
+        return None
+    
+    def encontrar_orcamento_cliente_atual(self, clientes_lista):
+        if clientes_lista.cliente_atual is None:
+            return None
+        orcamento = clientes_lista.cliente_atual.orcamento.head
+        if orcamento is not None:
+            return orcamento.value.get_orcamento()
+        return None
 
     def verificar_orcamento(self):
         if self.cliente_atual is None:
@@ -145,5 +175,3 @@ class LinkedListCliente:
                 print("  Gastos para o mês:", orcamento.get_gastos_mes())
                 print()
             current_node = current_node.next
-    
-    
