@@ -56,8 +56,7 @@ class LinkedListCliente:
             current_node = current_node.next
         else:
             return False
-        
-    
+         
     def calcular_total_despesas_cliente_atual(slef, lista_clientes):
         if lista_clientes.cliente_atual is None:
             return None
@@ -70,7 +69,19 @@ class LinkedListCliente:
             current_node = current_node.next
         lista_clientes.cliente_atual.total_despesas = total_despesas
         return total_despesas
-            
+    
+    def calcular_count_despesas_cliente_atual(self, lista_clientes):
+        if lista_clientes.cliente_atual is None:
+            return None
+        count_despesas = 0
+        despesas_cliente_atual = lista_clientes.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        while current_node is not None:
+            count_despesas += 1
+            current_node = current_node.next
+        lista_clientes.cliente_atual.numero_despesas = count_despesas
+        return count_despesas
+                
     def encontrar_gastos_mes_cliente_atual(self, clientes_lista):
         if clientes_lista.cliente_atual is None:
             return None
@@ -98,8 +109,7 @@ class LinkedListCliente:
             return
         nova_despesa = Despesas(categoria, descricao, valor, data)
         self.cliente_atual.despesas.append_despesas(nova_despesa)
-        return 1
-        
+        return 1 
 
     def adicionar_orcamento_cliente_logado(self, gastos_mes, orcamento):
         if self.cliente_atual is None:

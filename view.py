@@ -65,7 +65,7 @@ class View:
         self.login_button = tk.Button(self.frame, text="LOGIN", command=self.login)
         self.login_button.grid(row=4, column=0) #Botao Login - pag inicial
         
-        self.register_button = tk.Button(self.frame, text="REGISTER", command=self.frame_registo) #ver nova frame
+        self.register_button = tk.Button(self.frame, text="REGISTAR", command=self.frame_registo) #ver nova frame
         self.register_button.grid(row=5, column=0)  #Botao Registar - pag inicial
 
         self.quit_button = tk.Button(self.frame, text="SAIR", command=exit)
@@ -369,40 +369,44 @@ class View:
                 resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
                 if resto_gastos_mes > 0:
                     if self.valor_final_verificacao <= resto_orcamento:
-                        if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
-                            self.clientes_lista.print_list_cliente_despesas_orcamento()
-                            total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                            resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                            resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
-                            print()
-                            print("Total Despesas", total_despesas_cliente_atual)
-                            print("Resto dos gastos do mes",resto_gastos_mes)
-                            print("Resto orcamento", resto_orcamento)
-                            messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
-                            
-                            if resto_gastos_mes < 0:
-                                messagebox.showinfo("Aviso", "Excedeu os gastos do mês")
-                            elif resto_gastos_mes == 0:
-                                messagebox.showinfo("Aviso", "Gastos do mês esgotados")
-                            elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 10% dos seus gastos do mes")
-                            elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 25% dos seus gastos do mes")
-                            elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 50% dos seus gastos do mes")  
-                            elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 75% dos seus gastos do mes")  
+                        confirmacao_despesa = messagebox.askyesno("Confirmação", f"Deseja submeter a despesa de:\n\nCategoria: {categoria}\nDescrição: {descricao}\nValor: {self.valor_final_verificacao}€\nData: {data}")
+                        if confirmacao_despesa == True:    
+                            if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
+                                self.clientes_lista.print_list_cliente_despesas_orcamento()
+                                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
+                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
+                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+                                print()
+                                print("Total Despesas", total_despesas_cliente_atual)
+                                print("Resto dos gastos do mes",resto_gastos_mes)
+                                print("Resto orcamento", resto_orcamento)
+                                messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
+                                
+                                if resto_gastos_mes < 0:
+                                    messagebox.showinfo("Aviso", "Excedeu os gastos do mês")
+                                elif resto_gastos_mes == 0:
+                                    messagebox.showinfo("Aviso", "Gastos do mês esgotados")
+                                elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
+                                    messagebox.showinfo("Aviso", f"Restam menos de 10% dos seus gastos do mes")
+                                elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
+                                    messagebox.showinfo("Aviso", f"Restam menos de 25% dos seus gastos do mes")
+                                elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
+                                    messagebox.showinfo("Aviso", f"Restam menos de 50% dos seus gastos do mes")
+                                elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
+                                    messagebox.showinfo("Aviso", f"Restam menos de 75% dos seus gastos do mês")
 
-                            if resto_orcamento == 0:
-                                messagebox.showinfo("Aviso", "Orcamento esgotado")
-                            elif resto_orcamento <= orcamento_cliente_atual/10:
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 10% do seu orcamento")
-                            elif resto_orcamento <= orcamento_cliente_atual/4:
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 25% do seu orcamento")
-                            elif resto_orcamento <= orcamento_cliente_atual/2:
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 50% do seu orcamento")  
-                            elif resto_orcamento <= ((orcamento_cliente_atual*3)/4):
-                                messagebox.showinfo("Aviso", f"Ultrapassou os 75% do seu orcamento")  
+                                if resto_orcamento == 0:
+                                    messagebox.showinfo("Aviso", "Orcamento esgotado")
+                                elif resto_orcamento <= orcamento_cliente_atual/10:
+                                    messagebox.showinfo("Aviso", f"Restam menos de 10% do seu orcamento")
+                                elif resto_orcamento <= orcamento_cliente_atual/4:
+                                    messagebox.showinfo("Aviso", f"Restam menos de 25% do seu orcamento")
+                                elif resto_orcamento <= orcamento_cliente_atual/2:
+                                    messagebox.showinfo("Aviso", f"Restam menos de 50% do seu orcamento")
+                                elif resto_orcamento <= ((orcamento_cliente_atual*3)/4):
+                                    messagebox.showinfo("Aviso", f"Restam menos de 75% do seu orcamento")
+                        else:
+                            verificacao_despesas_2 = False
                     else:
                         messagebox.showinfo("Erro", "Despesa maior que o orcamento")
                         verificacao_despesas_2 = False
@@ -428,55 +432,36 @@ class View:
                     self.frame.destroy()    #destruir a frame
                     self.frame_menu()       #aceder a frame anterior
         
-    def frame_ver_despesa(self):    #frame ver despesas
-        if self.frame:              
-            self.frame.destroy()    #destruição da frame
-        
-        self.frame = tk.Frame(self.master) #recriação da frame
-        self.frame.pack()
+    def frame_ver_despesa(self):  # frame ver despesas
+        # Criar janela principal
+        janela = tk.Tk()
+        janela.title("Exemplo de Tabela")
 
-        self.master.geometry("500x300")
-        self.master.title("Vizualizar Despesas")
-        self.master.resizable(False, False)     #delimitadores da frame
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()
+        # Criar Treeview
+        tree = ttk.Treeview(janela)
 
-        self.name_label = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
-        self.name_label.grid(row=10, column=5) 
-        self.name_label = tk.Button(self.frame, text="VER GRAFICO", command=self.ver_grafico) #botao ver gráfico
-        self.name_label.grid(row=10, column=0)    
-   
-    def ver_grafico(self):         #frame ver gráfico
-        if self.frame:
-            self.frame.destroy()
+        # Definir colunas
+        tree["columns"] = ("Categoria", "Descrição", "Valor", "Data")
 
-        self.master.geometry("600x600")
-        self.master.title("Vizualizar Gráfico")
-        self.master.resizable(False, False)
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()
+        # Formatar cabeçalhos das colunas
+        tree.heading("Categoria", text="Categoria")
+        tree.heading("Descrição", text="Descrição")
+        tree.heading("Valor", text="Valor")
+        tree.heading("Data", text="Data")
 
-        # Coordenadas do gráfico
-        x_values = [2, 3, 1]
-        y_values = [1, 2, 3]
+        tree.column("#0", width=0)
 
-        # Ordenar as coordenadas com base nos valores de x
-        sorted_coordinates = sorted(zip(x_values, y_values), key=lambda coord: coord[0])
-        x_values, y_values = zip(*sorted_coordinates)
+        # Adicionar itens/linhas à tabela
+        tree.insert("", "end", values=("João", 25, "São Paulo", "ola"))
+        tree.insert("", "end", values=("Maria", 30, "Rio de Janeiro", "adeus"))
+        tree.insert("", "end", values=("Pedro", 35, "Belo Horizonte", "olaadeus"))
 
-        # Crie o gráfico com o Matplotlib
-        fig, ax = plt.subplots()
-        ax.plot(x_values, y_values, '-o', color='red')
+        # Exibir a tabela
+        tree.pack()
 
-        # Crie um objeto do canvas do Matplotlib e incorpore-o no widget Canvas do Tkinter
-        canvas = FigureCanvasTkAgg(fig, master=self.frame)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        # Executar a janela principal
+        janela.mainloop()
 
-        # Adicione um botão "Sair" que permita ao usuário encerrar o programa
-        self.name_label = tk.Button(self.frame, text="VOLTAR", command=self.frame_ver_despesa) #botao voltar
-        self.name_label.pack()
-            
     def frame_ver_orcamento(self): #frame ver orçamento
         if self.frame:
             self.frame.destroy()    #eliminar a frame
@@ -552,21 +537,27 @@ class View:
             username_atual = self.username
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
-            if self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento) == 1:
-                messagebox.showinfo("Erro", "O cliente já possui um orçamento.")
-                verificacao_orcamento_2 = False    
-            else:
-                self.clientes_lista.print_list_cliente_despesas_orcamento()
-                messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
+            confirmacao_orcamento = messagebox.askyesno("Confirmação", f"Deseja submeter o orcamento de:\n\nOrcamento: {self.orcamento_final_verificacao}€\nGastos Mensais: {self.gastos_mes_final_verificacao}€")
+            if confirmacao_orcamento == True:    
+                if self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento) == 1:
+                    messagebox.showinfo("Erro", "O cliente já possui um orçamento.")
+                    verificacao_orcamento_2 = False    
+                else:
+                    self.clientes_lista.print_list_cliente_despesas_orcamento()
+                    messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
 
-            if verificacao_orcamento == False:
+                if verificacao_orcamento_2 == False:
+                    if self.frame:
+                        self.frame.destroy()    #destruir a frame
+                        self.frame_menu() 
+                
                 if self.frame:
                     self.frame.destroy()    #destruir a frame
-                    self.frame_menu() 
-
-            if self.frame:
-                self.frame.destroy()    #destruir a frame
-                self.frame_menu()  
+                    self.frame_menu()  
+            else:
+                if self.frame:
+                    self.frame.destroy()    #destruir a frame
+                    self.frame_ver_orcamento()
                 
     def eliminar_conta(self):
         linked_list_cliente = LinkedListCliente()
