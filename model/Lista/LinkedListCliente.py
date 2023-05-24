@@ -59,7 +59,7 @@ class LinkedListCliente:
          
     def calcular_total_despesas_cliente_atual(slef, lista_clientes):
         if lista_clientes.cliente_atual is None:
-            return None
+            return 0
         total_despesas = 0
         despesas_cliente_atual = lista_clientes.cliente_atual.despesas
         current_node = despesas_cliente_atual.head
@@ -72,7 +72,7 @@ class LinkedListCliente:
     
     def calcular_count_despesas_cliente_atual(self, lista_clientes):
         if lista_clientes.cliente_atual is None:
-            return None
+            return 0
         count_despesas = 0
         despesas_cliente_atual = lista_clientes.cliente_atual.despesas
         current_node = despesas_cliente_atual.head
@@ -81,26 +81,90 @@ class LinkedListCliente:
             current_node = current_node.next
         lista_clientes.cliente_atual.numero_despesas = count_despesas
         return count_despesas
+    
+    def calcular_count_orcamento_cliente_atual(self, lista_clientes):
+        if lista_clientes.cliente_atual is None:
+            return 0
+        count_orcamento = 0
+        orcamento_cliente_atual = lista_clientes.cliente_atual.orcamento
+        current_node = orcamento_cliente_atual.head
+        while current_node is not None:
+            count_orcamento += 1
+            current_node = current_node.next
+        lista_clientes.cliente_atual.numero_orcamento = count_orcamento
+        return count_orcamento
                 
     def encontrar_gastos_mes_cliente_atual(self, clientes_lista):
         if clientes_lista.cliente_atual is None:
-            return None
+            return 0
         orcamento = clientes_lista.cliente_atual.orcamento.head
         if orcamento is not None:
             return orcamento.value.get_gastos_mes()
-        return None
+        return 0
     
-    def encontrar_orcamento_cliente_atual(self, clientes_lista):
+    def encontrar_categoria_despesas_cliente_atual(self, clientes_lista, posicao):
         if clientes_lista.cliente_atual is None:
             return None
+        despesas_cliente_atual = clientes_lista.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        count = 0
+        while current_node is not None:
+            if count == posicao:
+                return current_node.value.get_categoria()
+            count += 1
+            current_node = current_node.next
+        return None
+
+    def encontrar_descricao_despesas_cliente_atual(self, clientes_lista, posicao):
+        if clientes_lista.cliente_atual is None:
+            return None
+        despesas_cliente_atual = clientes_lista.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        count = 0
+        while current_node is not None:
+            if count == posicao:
+                return current_node.value.get_descricao()
+            count += 1
+            current_node = current_node.next
+        return None
+
+    def encontrar_valor_despesas_cliente_atual(self, clientes_lista, posicao):
+        if clientes_lista.cliente_atual is None:
+            return None
+        despesas_cliente_atual = clientes_lista.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        count = 0
+        while current_node is not None:
+            if count == posicao:
+                return current_node.value.get_valor()
+            count += 1
+            current_node = current_node.next
+        return None
+
+    def encontrar_data_despesas_cliente_atual(self, clientes_lista, posicao):
+        if clientes_lista.cliente_atual is None:
+            return None
+        despesas_cliente_atual = clientes_lista.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        count = 0
+        while current_node is not None:
+            if count == posicao:
+                return current_node.value.get_data()
+            count += 1
+            current_node = current_node.next
+        return None
+
+    def encontrar_orcamento_cliente_atual(self, clientes_lista):
+        if clientes_lista.cliente_atual is None:
+            return 0
         orcamento = clientes_lista.cliente_atual.orcamento.head
         if orcamento is not None:
             return orcamento.value.get_orcamento()
-        return None
+        return 0
 
     def verificar_orcamento(self):
         if self.cliente_atual is None:
-            return
+            return 0
         if self.cliente_atual.orcamento_count == 0:
             return 1
 

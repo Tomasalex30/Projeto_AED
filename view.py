@@ -26,6 +26,7 @@ class View:
         self.date_entry = tk.Entry(self.frame)
         self.frame.pack()
         self.frame_login()
+        self.tree = None
         self.username = None
         self.password = None 
         self.orcamento = None
@@ -276,9 +277,6 @@ class View:
         self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login) #botao voltar
         self.sign_out.grid(row=9 , column=1)#not working
 
-        self.sign_out = tk.Button(self.frame ,  text= "ELIMINAR CONTA", command= self.eliminar_conta) #botao voltar
-        self.sign_out.grid(row=10 , column=1)#not working
-
     def frame_adicionar_despesas(self): #frame add despesas
         if self.frame:
             self.frame.destroy()
@@ -326,6 +324,23 @@ class View:
         
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
         self.voltar_button.grid(row=4, column=1)
+
+        gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))
+        orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))
+        total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
+        resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
+        resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+        
+        if gastos_mes_cliente_atual != 0 or orcamento_cliente_atual != 0:
+            self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_gastos_mes}€ de limite de gastos do mês")
+            self.nome_label.grid(row=5, column=0)
+            self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_orcamento}€ de orçamento")
+            self.nome_label.grid(row=6, column=0)
+        else:
+            self.nome_label = tk.Label(self.frame, text=f"Não têm limite de gastos do mês")
+            self.nome_label.grid(row=5, column=0)
+            self.nome_label = tk.Label(self.frame, text=f"Não têm orçamento")
+            self.nome_label.grid(row=6, column=0)
     
     def adicionar_despesas(self): #função adicionar despesas
         categoria = self.combo.get() #valor entry categoria
@@ -431,37 +446,112 @@ class View:
                 if self.frame:
                     self.frame.destroy()    #destruir a frame
                     self.frame_menu()       #aceder a frame anterior
+    
+    def frame_ver_despesa(self):   
+        username_atual = self.username
+        password_atual = self.password
+        self.clientes_lista.cliente_logado(username_atual, password_atual)     
+        count_despesas = int(self.clientes_lista.calcular_count_despesas_cliente_atual(self.clientes_lista))
+
+        if count_despesas == 0:
+            messagebox.showinfo("Sem Despesas", "Não há despesas para exibir.")
+            return
+
+        sorting_order_data = "asc"  # Sorting order for "Data" column
+        sorting_order_valor = "asc"  # Sorting order for "Valor" column
+        sorting_order_categoria = "asc"  # Sorting order for "Categoria" column
+
+        def ordenar_data():
+            nonlocal sorting_order_data
+            items = []
+            children = self.tree.get_children()
+            for child in children:
+                values = self.tree.item(child, "values")
+                items.append((child, values))
+            items.sort(key=lambda item: item[1][3])
+            if sorting_order_data == "desc":
+                items.reverse()
+                sorting_order_data = "asc"
+            else:
+                sorting_order_data = "desc"
+            self.tree.delete(*children)
+            for item in items:
+                self.tree.insert("", "end", values=item[1], iid=item[0])
+            switch_button_data.config(text=f"Data [{sorting_order_data.upper()}]")
+
+        sorting_order_valor = "asc"  # Sorting order for "Valor" column
+
+        def ordenar_valor():
+            nonlocal sorting_order_valor
+            items = []
+            children = self.tree.get_children()
+            for child in children:
+                values = self.tree.item(child, "values")
+                items.append((child, values))
+            items.sort(key=lambda item: float(item[1][2]))
+            if sorting_order_valor == "desc":
+                items.reverse()
+                sorting_order_valor = "asc"
+            else:
+                sorting_order_valor = "desc"
+            self.tree.delete(*children)
+            for item in items:
+                self.tree.insert("", "end", values=item[1], iid=item[0])
+            switch_button_valor.config(text=f"Valor [{sorting_order_valor.upper()}]")
+
+        sorting_order_categoria = "asc"  # Sorting order for "Categoria" column
+
+        def sort_by_categoria():
+            nonlocal sorting_order_categoria
+            items = []
+            children = self.tree.get_children()
+            for child in children:
+                values = self.tree.item(child, "values")
+                items.append((child, values))
+            items.sort(key=lambda item: item[1][0])
+            if sorting_order_categoria == "desc":
+                items.reverse()
+                sorting_order_categoria = "asc"
+            else:
+                sorting_order_categoria = "desc"
+            self.tree.delete(*children)
+            for item in items:
+                self.tree.insert("", "end", values=item[1], iid=item[0])
+            switch_button_categoria.config(text=f"Categoria [{sorting_order_categoria.upper()}]")
+
+        self.janela = tk.Tk()
+        self.janela.title("Tabela")
+
+        self.tree = ttk.Treeview(self.janela)
+        self.tree["columns"] = ("Categoria", "Descrição", "Valor", "Data")
+
+        self.tree.heading("Categoria", text="Categoria", command=sort_by_categoria)
+        self.tree.heading("Descrição", text="Descrição")
+        self.tree.heading("Valor", text="Valor", command=ordenar_valor)
+        self.tree.heading("Data", text="Data", command=ordenar_data)
+
+        self.tree.column("#0", width=0)
+
+        for i in range(0, count_despesas):
+            categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i)
+            descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i)
+            valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)
+            data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i)
+            self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd))
+
+        switch_button_categoria = ttk.Button(self.janela, text="Categoria [ASC]", command=sort_by_categoria)
+        switch_button_categoria.grid(row=0, column=0)
+
+        switch_button_valor = ttk.Button(self.janela, text="Valor [ASC]", command=ordenar_valor)
+        switch_button_valor.grid(row=0, column=1)
+
+        switch_button_data = ttk.Button(self.janela, text="Data [ASC]", command=ordenar_data)
+        switch_button_data.grid(row=0, column=2)
+
+        self.tree.grid(row=1, column=0, columnspan=3)
+
+        self.janela.mainloop()
         
-    def frame_ver_despesa(self):  # frame ver despesas
-        # Criar janela principal
-        janela = tk.Tk()
-        janela.title("Exemplo de Tabela")
-
-        # Criar Treeview
-        tree = ttk.Treeview(janela)
-
-        # Definir colunas
-        tree["columns"] = ("Categoria", "Descrição", "Valor", "Data")
-
-        # Formatar cabeçalhos das colunas
-        tree.heading("Categoria", text="Categoria")
-        tree.heading("Descrição", text="Descrição")
-        tree.heading("Valor", text="Valor")
-        tree.heading("Data", text="Data")
-
-        tree.column("#0", width=0)
-
-        # Adicionar itens/linhas à tabela
-        tree.insert("", "end", values=("João", 25, "São Paulo", "ola"))
-        tree.insert("", "end", values=("Maria", 30, "Rio de Janeiro", "adeus"))
-        tree.insert("", "end", values=("Pedro", 35, "Belo Horizonte", "olaadeus"))
-
-        # Exibir a tabela
-        tree.pack()
-
-        # Executar a janela principal
-        janela.mainloop()
-
     def frame_ver_orcamento(self): #frame ver orçamento
         if self.frame:
             self.frame.destroy()    #eliminar a frame
@@ -576,4 +666,10 @@ class View:
         
     def verificar_numerico(self, valor): #função para apenas escrever numerico ou .
         return re.match(r"^\d*\.?\d*$", valor) is not None #biblioteca para verificar se o valor escrito é numerico ou um .
+    
+    def limpar_tabela(self):
+        if self.tree:
+            self.tree.delete(*self.tree.get_children())
+
+    
     
