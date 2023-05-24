@@ -73,7 +73,7 @@ class View:
         self.quit_button.grid(row=6, column=0)  #Botao Sair do programa - pag inicial
 
     def login(self):
-            username_login = self.nome_entry.get()
+            username_login = self.nome_entry.get()      #username logado no momento
             password_login = self.password_entry.get()
             
             verificacao_login = True
@@ -111,7 +111,7 @@ class View:
                             password_encontrada = password_login
                             break
                     
-                    if cliente_encontrado:
+                    if cliente_encontrado: #se o login for feito corretamente
                         self.username = username_login
                         self.password = password_login
                         messagebox.showinfo("Sucesso", "Login bem-sucedido")
@@ -264,18 +264,17 @@ class View:
         self.frame = tk.Frame(self.master)
         self.frame.pack()
         
-        #VER O GRID DEPOIS
         self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ", command=self.frame_adicionar_despesas) #botao adicionar despesas
-        self.adicionar_depesas.grid(row=3 , column=1,)#not working
+        self.adicionar_depesas.grid(row=3 , column=1,)
         
         self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: ", command = self.frame_ver_despesa) #botao ver despesas
-        self.ver_depesas.grid(row=5 , column=1,)#not working
+        self.ver_depesas.grid(row=5 , column=1,)
         
-        self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:", command= self.frame_ver_orcamento) #botao orçamento
-        self.orcamento.grid(row=7 , column=1)#not working
+        self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:", command= self.frame_definir_orcamento) #botao definir orçamento
+        self.orcamento.grid(row=7 , column=1)
 
         self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login) #botao voltar
-        self.sign_out.grid(row=9 , column=1)#not working
+        self.sign_out.grid(row=9 , column=1)
 
     def frame_adicionar_despesas(self): #frame add despesas
         if self.frame:
@@ -325,19 +324,19 @@ class View:
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
         self.voltar_button.grid(row=4, column=1)
 
-        gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))
-        orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))
-        total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-        resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-        resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+        gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista)) #função que recolhe os gastos do mes definidos pelo cliente
+        orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))  #função que recolhe o orcamento do mes definidos pelo cliente
+        total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista)) #função que soma todas as despesas do cliente
+        resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual #gastos do mes atual
+        resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual #orcamento atual
         
-        if gastos_mes_cliente_atual != 0 or orcamento_cliente_atual != 0:
+        if gastos_mes_cliente_atual != 0 or orcamento_cliente_atual != 0: #serve para verificar se existe orcamento ou gastos do mes para o texto
             self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_gastos_mes}€ de limite de gastos do mês")
             self.nome_label.grid(row=5, column=0)
             self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_orcamento}€ de orçamento")
             self.nome_label.grid(row=6, column=0)
         else:
-            self.nome_label = tk.Label(self.frame, text=f"Não têm limite de gastos do mês")
+            self.nome_label = tk.Label(self.frame, text=f"Não tem limite de gastos do mês")
             self.nome_label.grid(row=5, column=0)
             self.nome_label = tk.Label(self.frame, text=f"Não têm orçamento")
             self.nome_label.grid(row=6, column=0)
@@ -353,7 +352,7 @@ class View:
             messagebox.showinfo("Erro", "Descrição demasiado longa!") #verificacao mensagem longa 
             verificacao_despesas = False
         if len(descricao) == 0:
-            messagebox.showinfo("Erro", "Complete a descrição")
+            messagebox.showinfo("Erro", "Complete a descrição") #verificação descrição
             verificacao_despesas = False
         if len(valor) == 0:
             messagebox.showinfo("Erro", "Defina o valor")
@@ -375,72 +374,72 @@ class View:
             
             username_atual = self.username
             password_atual = self.password
-            self.clientes_lista.cliente_logado(username_atual, password_atual)
+            self.clientes_lista.cliente_logado(username_atual, password_atual) #Encontrar utilizador atual
             if self.clientes_lista.verificar_orcamento() != 1:
-                gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))
-                orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))
-                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+                gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))         #
+                orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))           #
+                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))  # encontrar e defenir vareaveis do utilizador atual
+                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual                                            #
+                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual                                              #
                 if resto_gastos_mes > 0:
                     if self.valor_final_verificacao <= resto_orcamento:
-                        confirmacao_despesa = messagebox.askyesno("Confirmação", f"Deseja submeter a despesa de:\n\nCategoria: {categoria}\nDescrição: {descricao}\nValor: {self.valor_final_verificacao}€\nData: {data}")
+                        confirmacao_despesa = messagebox.askyesno("Confirmação", f"Deseja submeter a despesa de:\n\nCategoria: {categoria}\nDescrição: {descricao}\nValor: {self.valor_final_verificacao}€\nData: {data}") # verificacao de operacao
                         if confirmacao_despesa == True:    
                             if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
                                 self.clientes_lista.print_list_cliente_despesas_orcamento()
                                 total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual #gastos do mes atual
+                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual #orcamento atual
                                 print()
                                 print("Total Despesas", total_despesas_cliente_atual)
                                 print("Resto dos gastos do mes",resto_gastos_mes)
                                 print("Resto orcamento", resto_orcamento)
-                                messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
+                                messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")       # realizacao da operacao confirmada(adicionar despesa)
                                 
                                 if resto_gastos_mes < 0:
-                                    messagebox.showinfo("Aviso", "Excedeu os gastos do mês")
+                                    messagebox.showinfo("Aviso", "Excedeu os gastos do mês")     # Aviso excedeu gasto do mes
                                 elif resto_gastos_mes == 0:
-                                    messagebox.showinfo("Aviso", "Gastos do mês esgotados")
+                                    messagebox.showinfo("Aviso", "Gastos do mês esgotados")      #Aviso gastos dos mes esgotado
                                 elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
-                                    messagebox.showinfo("Aviso", f"Restam menos de 10% dos seus gastos do mes")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 10% dos seus gastos do mes")      #Aviso 10% dos gastos do mes 
                                 elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
-                                    messagebox.showinfo("Aviso", f"Restam menos de 25% dos seus gastos do mes")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 25% dos seus gastos do mes")      #Aviso 25% dos gastos do mes 
                                 elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
-                                    messagebox.showinfo("Aviso", f"Restam menos de 50% dos seus gastos do mes")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 50% dos seus gastos do mes")      #Aviso 50% dos gastos do mes 
                                 elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
-                                    messagebox.showinfo("Aviso", f"Restam menos de 75% dos seus gastos do mês")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 75% dos seus gastos do mês")      #Aviso 75% dos gastos do mes 
 
                                 if resto_orcamento == 0:
-                                    messagebox.showinfo("Aviso", "Orcamento esgotado")
+                                    messagebox.showinfo("Aviso", "Orcamento esgotado")           #Aviso orcamento esgotado
                                 elif resto_orcamento <= orcamento_cliente_atual/10:
-                                    messagebox.showinfo("Aviso", f"Restam menos de 10% do seu orcamento")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 10% do seu orcamento")            #Aviso 10% do orocamento 
                                 elif resto_orcamento <= orcamento_cliente_atual/4:
-                                    messagebox.showinfo("Aviso", f"Restam menos de 25% do seu orcamento")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 25% do seu orcamento")            #Aviso 25% do orocamento 
                                 elif resto_orcamento <= orcamento_cliente_atual/2:
-                                    messagebox.showinfo("Aviso", f"Restam menos de 50% do seu orcamento")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 50% do seu orcamento")            #Aviso 50% do orocamento 
                                 elif resto_orcamento <= ((orcamento_cliente_atual*3)/4):
-                                    messagebox.showinfo("Aviso", f"Restam menos de 75% do seu orcamento")
+                                    messagebox.showinfo("Aviso", f"Restam menos de 75% do seu orcamento")            #Aviso 75% do orocamento 
                         else:
                             verificacao_despesas_2 = False
                     else:
-                        messagebox.showinfo("Erro", "Despesa maior que o orcamento")
+                        messagebox.showinfo("Erro", "Despesa maior que o orcamento")    # Erro logico de variaveis
                         verificacao_despesas_2 = False
                 else:
-                    messagebox.showinfo("Erro", "Excedeu os gastos do mês")
+                    messagebox.showinfo("Erro", "Excedeu os gastos do mês")       #Erro excedeu os gastos do mes
                     verificacao_despesas_2 = 1    
             else:
-                messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")
+                messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")     #Erro falta de variavel importante
                 verificacao_despesas_2 = 1
             
             if verificacao_despesas_2 == False:
                 if self.frame:
-                    self.frame.destroy()
-                    self.frame_adicionar_despesas()
+                    self.frame.destroy()                #destruir a frame
+                    self.frame_adicionar_despesas()     #aceder a frame adicionar despesas
             
             if verificacao_despesas_2 == 1:
                 if self.frame:
-                    self.frame.destroy()    
-                    self.frame_menu()  
+                    self.frame.destroy()   #destruir a frame   
+                    self.frame_menu()      #aceder a frame anterior
 
             if verificacao_despesas_2 == True:
                 if self.frame:
@@ -450,109 +449,160 @@ class View:
     def frame_ver_despesa(self):   
         username_atual = self.username
         password_atual = self.password
-        self.clientes_lista.cliente_logado(username_atual, password_atual)     
+        self.clientes_lista.cliente_logado(username_atual, password_atual)     #Encontrar utilizador atual
         count_despesas = int(self.clientes_lista.calcular_count_despesas_cliente_atual(self.clientes_lista))
 
         if count_despesas == 0:
-            messagebox.showinfo("Sem Despesas", "Não há despesas para exibir.")
+            messagebox.showinfo("Sem Despesas", "Não há despesas para exibir.")  #Falta de vareaveis importante
             return
 
-        sorting_order_data = "asc"  # Sorting order for "Data" column
-        sorting_order_valor = "asc"  # Sorting order for "Valor" column
-        sorting_order_categoria = "asc"  # Sorting order for "Categoria" column
+        sorting_order_data = "asc"  #ordenação inicial da data
+        sorting_order_valor = "asc"  #ordenação incial do valor
+        sorting_order_categoria = "asc"  #ordenação inicial da categoria
+
+        categorias = [] #lista que serve para armazenar as categorias
+        datas = [] #lista que serve para armazenar as datas 
 
         def ordenar_data():
-            nonlocal sorting_order_data
-            items = []
-            children = self.tree.get_children()
-            for child in children:
+            nonlocal sorting_order_data  #indica que a variavel nao e local, referenciada acima
+            items = [] #armazena os itens que serao ordenados
+            children = self.tree.get_children() #vai buscar os filhos do objeto self.tree
+            for child in children: #iteração de todos os filhos
                 values = self.tree.item(child, "values")
-                items.append((child, values))
-            items.sort(key=lambda item: item[1][3])
-            if sorting_order_data == "desc":
-                items.reverse()
-                sorting_order_data = "asc"
-            else:
-                sorting_order_data = "desc"
-            self.tree.delete(*children)
-            for item in items:
-                self.tree.insert("", "end", values=item[1], iid=item[0])
-            switch_button_data.config(text=f"Data [{sorting_order_data.upper()}]")
-
-        sorting_order_valor = "asc"  # Sorting order for "Valor" column
+                items.append((child, values)) #sao adicionados os valores que cada filho tem a lista items
+            items.sort(key=lambda item: item[1][3]) #metodo sort para acessar o indice 3 
+            if sorting_order_data == "desc":    #
+                items.reverse()                 #
+                sorting_order_data = "asc"      # serve para inverter entre descendente e ascendente
+            else:                               #
+                sorting_order_data = "desc"     #
+            self.tree.delete(*children)                                             #   Nesta parte são eliminados todos os filhos da arvore para serem repostos 
+            for item in items:                                                      #   pelos valores presentesdentro da lista items cujo ja estão ordenados na forma pretendida
+                self.tree.insert("", "end", values=item[1], iid=item[0])            #   
+            switch_button_data.config(text=f"Data [{sorting_order_data.upper()}]")  
 
         def ordenar_valor():
-            nonlocal sorting_order_valor
-            items = []
-            children = self.tree.get_children()
-            for child in children:
+            nonlocal sorting_order_valor #indica que a variavel nao e local, referenciada acima
+            items = [] #armazena os itens que serao ordenados
+            children = self.tree.get_children() #vai buscar os filhos do objeto self.tree
+            for child in children: #iteração de todos os filhos
                 values = self.tree.item(child, "values")
-                items.append((child, values))
-            items.sort(key=lambda item: float(item[1][2]))
-            if sorting_order_valor == "desc":
-                items.reverse()
-                sorting_order_valor = "asc"
-            else:
-                sorting_order_valor = "desc"
+                items.append((child, values)) #sao adicionados os valores que cada filho tem a lista items
+            items.sort(key=lambda item: float(item[1][2])) #metodo sort para acessar o indice 2
+            if sorting_order_valor == "desc":   #
+                items.reverse()                 #
+                sorting_order_valor = "asc"     # serve para inverter entre descendente e ascendente
+            else:                               #
+                sorting_order_valor = "desc"    #
             self.tree.delete(*children)
-            for item in items:
-                self.tree.insert("", "end", values=item[1], iid=item[0])
-            switch_button_valor.config(text=f"Valor [{sorting_order_valor.upper()}]")
+            for item in items:                                                          #   Nesta parte são eliminados todos os filhos da arvore para serem repostos
+                self.tree.insert("", "end", values=item[1], iid=item[0])                #   pelos valores presentesdentro da lista items cujo ja estão ordenados na forma pretendida
+            switch_button_valor.config(text=f"Valor [{sorting_order_valor.upper()}]")   #
 
-        sorting_order_categoria = "asc"  # Sorting order for "Categoria" column
-
-        def sort_by_categoria():
-            nonlocal sorting_order_categoria
-            items = []
-            children = self.tree.get_children()
-            for child in children:
+        def ordenar_categoria():
+            nonlocal sorting_order_categoria #indica que a variavel nao e local, referenciada acima
+            items = [] #armazena os itens que serao ordenados
+            children = self.tree.get_children()#vai buscar os filhos do objeto self.tree
+            for child in children: #iteração de todos os filhos
                 values = self.tree.item(child, "values")
-                items.append((child, values))
-            items.sort(key=lambda item: item[1][0])
-            if sorting_order_categoria == "desc":
-                items.reverse()
-                sorting_order_categoria = "asc"
-            else:
-                sorting_order_categoria = "desc"
+                items.append((child, values)) #sao adicionados os valores que cada filho tem a lista items
+            items.sort(key=lambda item: item[1][0]) #metodo sort para acessar o indice 0 
+            if sorting_order_categoria == "desc":   #
+                items.reverse()                     #
+                sorting_order_categoria = "asc"     # serve para inverter entre descendente e ascendente
+            else:                                   #
+                sorting_order_categoria = "desc"    #
             self.tree.delete(*children)
-            for item in items:
-                self.tree.insert("", "end", values=item[1], iid=item[0])
-            switch_button_categoria.config(text=f"Categoria [{sorting_order_categoria.upper()}]")
+            for item in items:                                                                      #   Nesta parte são eliminados todos os filhos da arvore para serem repostos
+                self.tree.insert("", "end", values=item[1], iid=item[0])                            #   pelos valores presentesdentro da lista items cujo ja estão ordenados na forma pretendida
+            switch_button_categoria.config(text=f"Categoria [{sorting_order_categoria.upper()}]")   #
 
-        self.janela = tk.Tk()
+        self.janela = tk.Tk()       #cria janela da arvore
         self.janela.title("Tabela")
 
-        self.tree = ttk.Treeview(self.janela)
+        self.tree = ttk.Treeview(self.janela)  #cria arvore
         self.tree["columns"] = ("Categoria", "Descrição", "Valor", "Data")
 
-        self.tree.heading("Categoria", text="Categoria", command=sort_by_categoria)
-        self.tree.heading("Descrição", text="Descrição")
-        self.tree.heading("Valor", text="Valor", command=ordenar_valor)
-        self.tree.heading("Data", text="Data", command=ordenar_data)
+        self.tree.heading("Categoria", text="Categoria", command=ordenar_categoria) #
+        self.tree.heading("Descrição", text="Descrição")                            # headings de cada despesa
+        self.tree.heading("Valor", text="Valor", command=ordenar_valor)             #
+        self.tree.heading("Data", text="Data", command=ordenar_data)                #
 
         self.tree.column("#0", width=0)
 
         for i in range(0, count_despesas):
-            categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i)
-            descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i)
-            valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)
-            data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i)
-            self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd))
+            categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i) #
+            descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i) # valores de cada despesa
+            valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)         #
+            data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i)           #
+            self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd)) #insere os valores de cada despesa na tabeça     
+            if categoria_vd not in categorias:
+                categorias.append(categoria_vd) #serve para adicionar as categorias todas em uma lista
+            if data_vd not in datas:
+                datas.append(data_vd) #serve para adicionar as datas todas em uma lista
 
-        switch_button_categoria = ttk.Button(self.janela, text="Categoria [ASC]", command=sort_by_categoria)
+        def filtrar_por_categoria(categoria):
+            self.tree.delete(*self.tree.get_children())
+            if categoria == "Todas": # mostrar todas as categorias
+                for i in range(0, count_despesas): #loop que vai de 0 ate ao numero de despesas
+                    categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i) #
+                    descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i) # pegar os valores de cada despesa iterada
+                    valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)         # 
+                    data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i)           #
+                    self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd)) #insere os valores na tree ao selecionar todas                  
+            else:
+                for i in range(0, count_despesas):
+                    categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i) # mostrar mostrar apenas a categoria para filtrar
+                    if categoria_vd == categoria: #categoria escolhida
+                        descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i) # 
+                        valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)         # pega todos os valores pertencentes a essa categoria em especifico
+                        data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i)           #
+                        self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd)) #insere os valors na tree da categoria selecionada                     
+
+        def filtrar_por_data(data):
+            self.tree.delete(*self.tree.get_children())
+            if data == "Todas": # mostrar todas as categorias
+                for i in range(0, count_despesas): #loop que vai de 0 ate ao numero de despesas
+                    categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i) #
+                    descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i) # pegar os valores de cada despesa iterada
+                    valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)         # 
+                    data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i)           #
+                    self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd)) #insere os valores na tree ao selecionar todas  
+            else:
+                for i in range(0, count_despesas):
+                    data_vd = self.clientes_lista.encontrar_data_despesas_cliente_atual(self.clientes_lista, i) # mostrar mostrar apenas a data para filtrar
+                    if data_vd == data:#data escolhida
+                        categoria_vd = self.clientes_lista.encontrar_categoria_despesas_cliente_atual(self.clientes_lista, i) #
+                        descricao_vd = self.clientes_lista.encontrar_descricao_despesas_cliente_atual(self.clientes_lista, i) #pega todos os valores pertencentes a essa data em especifico
+                        valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)         #
+                        self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd)) #insere os valors na tree da data selecionada
+
+        switch_button_categoria = ttk.Button(self.janela, text="Categoria [ASC]", command=ordenar_categoria) #botao que ordena categoria
         switch_button_categoria.grid(row=0, column=0)
 
-        switch_button_valor = ttk.Button(self.janela, text="Valor [ASC]", command=ordenar_valor)
+        switch_button_valor = ttk.Button(self.janela, text="Valor [ASC]", command=ordenar_valor) #botao que ordena valor
         switch_button_valor.grid(row=0, column=1)
 
-        switch_button_data = ttk.Button(self.janela, text="Data [ASC]", command=ordenar_data)
+        switch_button_data = ttk.Button(self.janela, text="Data [ASC]", command=ordenar_data) #botao que ordena data
         switch_button_data.grid(row=0, column=2)
 
-        self.tree.grid(row=1, column=0, columnspan=3)
+        categorias.insert(0, "Todas")                                                                               #
+        combo_categoria = ttk.Combobox(self.janela, values=categorias, state="readonly")                            #
+        combo_categoria.bind("<<ComboboxSelected>>", lambda event: filtrar_por_categoria(combo_categoria.get()))    # Combobox para filtrar categorias 
+        combo_categoria.current(0)                                                                                  #
+        combo_categoria.grid(row=0, column=3)                                                                       #
+
+        datas.insert(0, "Todas")                                                                                    #
+        combo_data = ttk.Combobox(self.janela, values=datas, state="readonly")                                      #
+        combo_data.bind("<<ComboboxSelected>>", lambda event: filtrar_por_data(combo_data.get()))                   # Combobox para filtrar datas
+        combo_data.current(0)                                                                                       #
+        combo_data.grid(row=0, column=4)                                                                            #
+
+        self.tree.grid(row=1, column=0, columnspan=5)
 
         self.janela.mainloop()
         
-    def frame_ver_orcamento(self): #frame ver orçamento
+    def frame_definir_orcamento(self): #frame ver orçamento
         if self.frame:
             self.frame.destroy()    #eliminar a frame
         
@@ -588,23 +638,21 @@ class View:
     def definir_orcamento(self):
         gastos_mes = self.gastos_entry.get()
         orcamento = self.orcamento_entry.get()
-        # valor_despezas = self.despesas_lista.sum_despesas()
-        # orcamento_tempo_real = gastos_mes - valor_despezas
 
         verificacao_orcamento = True
-        if len(gastos_mes) == 0:
+        if len(gastos_mes) == 0:  #missing input error
             messagebox.showinfo("Erro", "Defina os gastos para o mês")
             verificacao_orcamento = False
-        if len(orcamento) == 0:
+        if len(orcamento) == 0:   #missing input error
             messagebox.showinfo("Erro", "Defina o orçamento")
             verificacao_orcamento = False
         
         if verificacao_orcamento == False:
             if self.frame:
                 self.frame.destroy()    #destruir a frame
-                self.frame_ver_orcamento() 
+                self.frame_definir_orcamento() 
     
-        if verificacao_orcamento == True:
+        if verificacao_orcamento == True:                 # verificacao logica de variaveis 
             self.gastos_mes_final_verificacao = float(gastos_mes)
             self.orcamento_final_verificacao = float(orcamento)
             if self.gastos_mes_final_verificacao > self.orcamento_final_verificacao:
@@ -614,9 +662,9 @@ class View:
         if verificacao_orcamento == False:
             if self.frame:
                 self.frame.destroy()    #destruir a frame
-                self.frame_ver_orcamento() 
+                self.frame_definir_orcamento() 
 
-        if verificacao_orcamento == True:
+        if verificacao_orcamento == True:                      #passou a verificacao inicial de erros 
             verificacao_orcamento_2 = True
             self.gastos_mes_final_verificacao = float(gastos_mes)
             self.orcamento_final_verificacao = float(orcamento)
@@ -629,11 +677,11 @@ class View:
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             confirmacao_orcamento = messagebox.askyesno("Confirmação", f"Deseja submeter o orcamento de:\n\nOrcamento: {self.orcamento_final_verificacao}€\nGastos Mensais: {self.gastos_mes_final_verificacao}€")
             if confirmacao_orcamento == True:    
-                if self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento) == 1:
+                if self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento) == 1: #erro ja tem orcamento
                     messagebox.showinfo("Erro", "O cliente já possui um orçamento.")
                     verificacao_orcamento_2 = False    
                 else:
-                    self.clientes_lista.print_list_cliente_despesas_orcamento()
+                    self.clientes_lista.print_list_cliente_despesas_orcamento()   #criar orcamento
                     messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
 
                 if verificacao_orcamento_2 == False:
@@ -647,7 +695,7 @@ class View:
             else:
                 if self.frame:
                     self.frame.destroy()    #destruir a frame
-                    self.frame_ver_orcamento()
+                    self.frame_definir_orcamento()
                 
     def eliminar_conta(self):
         linked_list_cliente = LinkedListCliente()
@@ -666,10 +714,7 @@ class View:
         
     def verificar_numerico(self, valor): #função para apenas escrever numerico ou .
         return re.match(r"^\d*\.?\d*$", valor) is not None #biblioteca para verificar se o valor escrito é numerico ou um .
-    
-    def limpar_tabela(self):
-        if self.tree:
-            self.tree.delete(*self.tree.get_children())
+
 
     
     
