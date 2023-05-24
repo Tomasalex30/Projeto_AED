@@ -194,40 +194,32 @@ class View:
             if len(nome_registo)==0 : 
                 messagebox.showinfo("Erro", "Complete o nome")     #Condicoes para verificacao de dados na pag de registo 
                 verificacao_registo = False
-
             if len(password_registo)==0  :
                 messagebox.showinfo("Erro", "Complete a password")  #Condicoes para verificacao de dados na pag de registo
                 verificacao_registo = False
-
             if len(password_registo_2)==0  :
                 messagebox.showinfo("Erro", "Complete a confirmação de password")      #Condicoes para verificacao de dados na pag de registo 
                 verificacao_registo = False
-
             if password_registo != password_registo_2 and len(password_registo_2)>0 and len(password_registo)>0:    #Condicoes para verificacao de dados na pag de registo 
                 messagebox.showinfo("Erro", "Passwords diferentes")
                 verificacao_registo = False
-
             if len(nif)==0:
                 messagebox.showinfo("Erro", "Complete o NIF")        #Condicoes para verificacao de dados na pag de registo 
                 verificacao_registo = False
-
             if len(password_registo) > 0 and len(password_registo) < 8:
                 messagebox.showinfo("Erro", "Password Pequena") 
                 verificacao_registo = False
-
             if len(nif) < 9:                                           #Condicoes para verificacao de dados na pag de registo 
                 if len(nif) == 0:
                     pass
                 else:
                     messagebox.showinfo("Erro", "NIF Pequeno")
                     verificacao_registo = False
-
             for cliente in self.clientes_lista:
                 if cliente.get_nome() == nome_registo:
                     messagebox.showinfo("Erro", "Nome de registo já existente")     #Condicoes para verificacao de dados na pag de registo 
                     verificacao_registo = False
                     break                                                     
-
             for cliente in self.clientes_lista:
                 if cliente.get_nif() == nif:
                     messagebox.showinfo("Erro", "NIF já existente")     #Condicoes para verificacao de dados na pag de registo
@@ -355,9 +347,13 @@ class View:
             messagebox.showinfo("Erro", "Categoria Inválida")
             verificacao_despesas = False
 
-
+        if verificacao_despesas == False:
+            if self.frame:
+                self.frame.destroy()
+                self.frame_adicionar_despesas()
 
         if verificacao_despesas == True:
+            verificacao_despesas_2 = True
             self.valor_final_verificacao = float(valor)
             despesa = Despesas(categoria, descricao, self.valor_final_verificacao, data) #adicionar as despesas na classe Despesa
             self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
@@ -370,42 +366,67 @@ class View:
                 orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))
                 total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
                 resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                if resto_gastos_mes != 0:
-                    if self.valor_final_verificacao <= resto_gastos_mes:
-                        if self.valor_final_verificacao + total_despesas_cliente_atual <= gastos_mes_cliente_atual:
-                            if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
-                                self.clientes_lista.print_list_cliente_despesas_orcamento()
-                                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
-                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
-                                print()
-                                print("Total Despesas", total_despesas_cliente_atual)
-                                print("Resto dos gastos do mes",resto_gastos_mes)
-                                print("Resto orcamento", resto_orcamento)
-                                messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
-                                
-                                if resto_gastos_mes == 0:
-                                    messagebox.showinfo("Aviso", "Gastos do mês esgotados")
-                                elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
-                                    messagebox.showinfo("Aviso", f"Ultrapassou os 10% dos seus gastos do mes")
-                                elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
-                                    messagebox.showinfo("Aviso", f"Ultrapassou os 25% dos seus gastos do mes")
-                                elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
-                                    messagebox.showinfo("Aviso", f"Ultrapassou os 50% dos seus gastos do mes")  
-                                elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
-                                    messagebox.showinfo("Aviso", f"Ultrapassou os 75% dos seus gastos do mes")  
-                        else:
-                            messagebox.showinfo("Erro", "Despesa vai exceder os gastos do mês")
+                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+                if resto_gastos_mes > 0:
+                    if self.valor_final_verificacao <= resto_orcamento:
+                        if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
+                            self.clientes_lista.print_list_cliente_despesas_orcamento()
+                            total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
+                            resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual
+                            resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
+                            print()
+                            print("Total Despesas", total_despesas_cliente_atual)
+                            print("Resto dos gastos do mes",resto_gastos_mes)
+                            print("Resto orcamento", resto_orcamento)
+                            messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")
+                            
+                            if resto_gastos_mes < 0:
+                                messagebox.showinfo("Aviso", "Excedeu os gastos do mês")
+                            elif resto_gastos_mes == 0:
+                                messagebox.showinfo("Aviso", "Gastos do mês esgotados")
+                            elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 10% dos seus gastos do mes")
+                            elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 25% dos seus gastos do mes")
+                            elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 50% dos seus gastos do mes")  
+                            elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 75% dos seus gastos do mes")  
+
+                            if resto_orcamento == 0:
+                                messagebox.showinfo("Aviso", "Orcamento esgotado")
+                            elif resto_orcamento <= orcamento_cliente_atual/10:
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 10% do seu orcamento")
+                            elif resto_orcamento <= orcamento_cliente_atual/4:
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 25% do seu orcamento")
+                            elif resto_orcamento <= orcamento_cliente_atual/2:
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 50% do seu orcamento")  
+                            elif resto_orcamento <= ((orcamento_cliente_atual*3)/4):
+                                messagebox.showinfo("Aviso", f"Ultrapassou os 75% do seu orcamento")  
                     else:
-                        messagebox.showinfo("Erro", "Despesa maior que os gastos do mês") 
+                        messagebox.showinfo("Erro", "Despesa maior que o orcamento")
+                        verificacao_despesas_2 = False
                 else:
-                    messagebox.showinfo("Erro", "Os gastos mensais chegaram ao limite")    
+                    messagebox.showinfo("Erro", "Excedeu os gastos do mês")
+                    verificacao_despesas_2 = 1    
             else:
                 messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")
+                verificacao_despesas_2 = 1
+            
+            if verificacao_despesas_2 == False:
+                if self.frame:
+                    self.frame.destroy()
+                    self.frame_adicionar_despesas()
+            
+            if verificacao_despesas_2 == 1:
+                if self.frame:
+                    self.frame.destroy()    
+                    self.frame_menu()  
 
-            if self.frame:
-                self.frame.destroy()    #destruir a frame
-                self.frame_menu()       #aceder a frame anterior
+            if verificacao_despesas_2 == True:
+                if self.frame:
+                    self.frame.destroy()    #destruir a frame
+                    self.frame_menu()       #aceder a frame anterior
         
     def frame_ver_despesa(self):    #frame ver despesas
         if self.frame:              
@@ -502,6 +523,11 @@ class View:
         if len(orcamento) == 0:
             messagebox.showinfo("Erro", "Defina o orçamento")
             verificacao_orcamento = False
+        
+        if verificacao_orcamento == False:
+            if self.frame:
+                self.frame.destroy()    #destruir a frame
+                self.frame_ver_orcamento() 
     
         if verificacao_orcamento == True:
             self.gastos_mes_final_verificacao = float(gastos_mes)
@@ -510,7 +536,13 @@ class View:
                 messagebox.showinfo("Erro", "Gastos para o mês superiores ao orçamento")
                 verificacao_orcamento = False
         
+        if verificacao_orcamento == False:
+            if self.frame:
+                self.frame.destroy()    #destruir a frame
+                self.frame_ver_orcamento() 
+
         if verificacao_orcamento == True:
+            verificacao_orcamento_2 = True
             self.gastos_mes_final_verificacao = float(gastos_mes)
             self.orcamento_final_verificacao = float(orcamento)
 
@@ -521,10 +553,16 @@ class View:
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual)
             if self.clientes_lista.adicionar_orcamento_cliente_logado(gastos_mes, orcamento) == 1:
-                messagebox.showinfo("Erro", "O cliente já possui um orçamento.")    
+                messagebox.showinfo("Erro", "O cliente já possui um orçamento.")
+                verificacao_orcamento_2 = False    
             else:
                 self.clientes_lista.print_list_cliente_despesas_orcamento()
                 messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
+
+            if verificacao_orcamento == False:
+                if self.frame:
+                    self.frame.destroy()    #destruir a frame
+                    self.frame_menu() 
 
             if self.frame:
                 self.frame.destroy()    #destruir a frame
