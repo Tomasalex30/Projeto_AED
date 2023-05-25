@@ -1,7 +1,8 @@
 import tkinter as tk
 import re
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import random
+# import matplotlib.pyplot as plt
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import messagebox , ttk
 from model.Cliente import * 
 from model.Despesas import *
@@ -11,6 +12,7 @@ from model.Lista.LinkedListCliente import *
 from model.Lista.LinkedListOrcamento import *
 from model.Lista.Iterador import *
 from tkcalendar import DateEntry  #fazer pip install tkcalendar no terminal
+
 
 
 class View:
@@ -321,8 +323,11 @@ class View:
         self.adicionar_button = tk.Button(self.frame, text="ADICIONAR", command=self.adicionar_despesas) #botao adicionar
         self.adicionar_button.grid(row=4, column=0)
         
+        self.adicionar_button = tk.Button(self.frame, text="SUGESTÕES", command=self.sugestoes) #botao adicionar
+        self.adicionar_button.grid(row=4, column=1)
+
         self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
-        self.voltar_button.grid(row=4, column=1)
+        self.voltar_button.grid(row=4, column=2)
 
         gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista)) #função que recolhe os gastos do mes definidos pelo cliente
         orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))  #função que recolhe o orcamento do mes definidos pelo cliente
@@ -332,14 +337,14 @@ class View:
         
         if gastos_mes_cliente_atual != 0 or orcamento_cliente_atual != 0: #serve para verificar se existe orcamento ou gastos do mes para o texto
             self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_gastos_mes}€ de limite de gastos do mês")
-            self.nome_label.grid(row=5, column=0)
+            self.nome_label.grid(row=5, column=1)
             self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_orcamento}€ de orçamento")
-            self.nome_label.grid(row=6, column=0)
+            self.nome_label.grid(row=6, column=1)
         else:
             self.nome_label = tk.Label(self.frame, text=f"Não tem limite de gastos do mês")
-            self.nome_label.grid(row=5, column=0)
+            self.nome_label.grid(row=5, column=1)
             self.nome_label = tk.Label(self.frame, text=f"Não têm orçamento")
-            self.nome_label.grid(row=6, column=0)
+            self.nome_label.grid(row=6, column=1)
     
     def adicionar_despesas(self): #função adicionar despesas
         categoria = self.combo.get() #valor entry categoria
@@ -375,16 +380,21 @@ class View:
             username_atual = self.username
             password_atual = self.password
             self.clientes_lista.cliente_logado(username_atual, password_atual) #Encontrar utilizador atual
+            
             if self.clientes_lista.verificar_orcamento() != 1:
                 gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))         #
                 orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))           #
                 total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))  # encontrar e defenir vareaveis do utilizador atual
                 resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual                                            #
                 resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual                                              #
+                
                 if resto_gastos_mes > 0:
+                    
                     if self.valor_final_verificacao <= resto_orcamento:
                         confirmacao_despesa = messagebox.askyesno("Confirmação", f"Deseja submeter a despesa de:\n\nCategoria: {categoria}\nDescrição: {descricao}\nValor: {self.valor_final_verificacao}€\nData: {data}") # verificacao de operacao
+                        
                         if confirmacao_despesa == True:    
+                            
                             if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
                                 self.clientes_lista.print_list_cliente_despesas_orcamento()
                                 total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
@@ -446,6 +456,90 @@ class View:
                     self.frame.destroy()    #destruir a frame
                     self.frame_menu()       #aceder a frame anterior
     
+    def sugestoes(self):
+        username_atual = self.username
+        password_atual = self.password
+        self.clientes_lista.cliente_logado(username_atual, password_atual)
+        count_despesas = int(self.clientes_lista.calcular_count_despesas_cliente_atual(self.clientes_lista))
+        alimentacao = "Alimentação"
+        habitacao = "Habitação"
+        lazer = "Lazer"
+        outros = "Outros"
+
+        if count_despesas == 0:
+            messagebox.showinfo("Sugestão", "Não há sugestões pois não há despesas")  
+            return
+        
+        sugestao_aleatoria = random.randint(1, 2)
+        
+        if sugestao_aleatoria == 1:
+            soma_alimentação = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, alimentacao))
+            soma_habitacao = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, habitacao))
+            soma_lazer = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, lazer))
+            soma_outros = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, outros))
+            
+            print("Total Alimentacao:", soma_alimentação)
+            print("Total Habitação:", soma_habitacao)
+            print("Total Lazer:", soma_lazer)
+            print("Total Outros:", soma_outros)
+
+            lista_valor_categorias = []
+            if soma_alimentação >= soma_habitacao and soma_alimentação >= soma_lazer and soma_alimentação >= soma_outros:
+                print (soma_alimentação)
+                lista_valor_categorias.append(f"Alimentação: {soma_alimentação}€")
+            if soma_habitacao >= soma_alimentação and soma_habitacao >= soma_lazer and soma_habitacao >= soma_outros:
+                print (soma_habitacao)
+                lista_valor_categorias.append(f"Habitação: {soma_habitacao}€")
+            if soma_lazer >= soma_alimentação and soma_lazer >= soma_habitacao and soma_lazer >= soma_outros:
+                print (soma_lazer)
+                lista_valor_categorias.append(f"Lazer: {soma_lazer}€")
+            if soma_outros >= soma_alimentação and soma_outros >= soma_habitacao and soma_outros >= soma_lazer:
+                print (soma_outros)
+                lista_valor_categorias.append(f"Outros: {soma_outros}€")
+        
+            if len(lista_valor_categorias) == 1:
+                messagebox.showinfo("Sugestão", f"A categoria no qual gastou mais dinheiro foi:\n\n{lista_valor_categorias[0]}\n\nTente gastar menos.")
+            elif len(lista_valor_categorias) == 2:
+                messagebox.showinfo("Sugestão", f"As categorias no qual gastou mais dinheiro foram:\n\n{lista_valor_categorias[0]}\n{lista_valor_categorias[1]}\n\nTente gastar menos.")
+            elif len(lista_valor_categorias) == 3:
+                messagebox.showinfo("Sugestão", f"As categorias no qual gastou mais dinheiro foram:\n\n{lista_valor_categorias[0]}\n{lista_valor_categorias[1]}\n{lista_valor_categorias[2]}\n\nTente gastar menos.")
+            elif len(lista_valor_categorias) == 3:
+                messagebox.showinfo("Sugestão", f"As categorias no qual gastou mais dinheiro foram:\n\n{lista_valor_categorias[0]}\n{lista_valor_categorias[1]}\n{lista_valor_categorias[2]}\n{lista_valor_categorias[3]}\n\nTente gastar menos.") 
+
+        elif sugestao_aleatoria == 2:
+            count_alimentação = int(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, alimentacao))
+            count_habitacao = int(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, habitacao))
+            count_lazer = int(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, lazer))
+            count_outros = float(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, outros))
+
+            lista_count_categorias = []
+            if count_alimentação >= count_habitacao and count_alimentação >= count_lazer and count_alimentação >= count_outros:
+                print (count_alimentação)
+                lista_count_categorias.append(f"Alimentação: {count_alimentação} despesas")
+            if count_habitacao >= count_alimentação and count_habitacao >= count_lazer and count_habitacao >= count_outros:
+                print (count_habitacao)
+                lista_count_categorias.append(f"Habitação: {count_habitacao} despesas")
+            if count_lazer >= count_alimentação and count_lazer >= count_habitacao and count_lazer >= count_outros:
+                print (count_lazer)
+                lista_count_categorias.append(f"Lazer: {count_lazer} despesas")
+            if count_outros >= count_alimentação and count_outros >= count_habitacao and count_outros >= count_lazer:
+                print (count_outros)
+                lista_count_categorias.append(f"Outros: {count_outros}despesas")
+        
+            if len(lista_count_categorias) == 1:
+                messagebox.showinfo("Sugestão", f"A categoria no qual fez mais despesas foi:\n\n{lista_count_categorias[0]}\n\nTente reduzir o número de despesas nesta categoria.")
+            elif len(lista_count_categorias) == 2:
+                messagebox.showinfo("Sugestão", f"As categorias no qual fez mais despesas foram:\n\n{lista_count_categorias[0]}\n{lista_count_categorias[1]}\n\nTente reduzir o numero de despesas nestas categorias.")
+            elif len(lista_count_categorias) == 3:
+                messagebox.showinfo("Sugestão", f"As categorias no qual fez mais despesas foram:\n\n{lista_count_categorias[0]}\n{lista_count_categorias[1]}\n{lista_count_categorias[2]}\n\nTente reduzir o numero de despesas nestas categorias.")
+            elif len(lista_count_categorias) == 3:
+                messagebox.showinfo("Sugestão", f"As categorias no qual fez mais despesas foram:\n\n{lista_count_categorias[0]}\n{lista_count_categorias[1]}\n{lista_count_categorias[2]}\n{lista_count_categorias[3]}\n\nTente reduzir o numero de despesas nestas categorias.")
+
+            print("Count Alimentacao:", soma_alimentação)
+            print("Count Habitação:", soma_habitacao)
+            print("Count Lazer:", soma_lazer)
+            print("Count Outros:", soma_outros)
+        
     def frame_ver_despesa(self):   
         username_atual = self.username
         password_atual = self.password

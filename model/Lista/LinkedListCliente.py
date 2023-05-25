@@ -70,6 +70,32 @@ class LinkedListCliente:
         lista_clientes.cliente_atual.total_despesas = total_despesas
         return total_despesas
     
+    def calcular_total_despesas_categoria_atual(slef, lista_clientes, categoria):
+        if lista_clientes.cliente_atual is None:
+            return 0
+        total_despesas = 0
+        despesas_cliente_atual = lista_clientes.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        while current_node is not None:
+            if current_node.value.get_categoria() == categoria:
+                valor_despesa = float(current_node.value.get_valor())
+                total_despesas += valor_despesa
+            current_node = current_node.next
+        return total_despesas
+    
+    def calcular_count_despesas_categoria_cliente_atual(self, lista_clientes, categoria):
+        if lista_clientes.cliente_atual is None:
+            return 0
+        count_despesas = 0
+        despesas_cliente_atual = lista_clientes.cliente_atual.despesas
+        current_node = despesas_cliente_atual.head
+        while current_node is not None:
+            if current_node.value.get_categoria() == categoria:
+                count_despesas += 1
+            current_node = current_node.next
+        lista_clientes.cliente_atual.numero_despesas_categoria = count_despesas
+        return count_despesas
+    
     def calcular_count_despesas_cliente_atual(self, lista_clientes):
         if lista_clientes.cliente_atual is None:
             return 0
@@ -184,6 +210,14 @@ class LinkedListCliente:
         self.cliente_atual.orcamento.append_orcamento(novo_orcamento)
         self.cliente_atual.orcamento_count += 1
         return 2
+    
+    def bubble_sort(self, colecao):
+        for i in range(len(colecao)):
+            for j in range(len(colecao) - i - 1):
+                if colecao[j] > colecao [j + 1]:
+                    tmp = colecao[j + 1]
+                    colecao[j + 1] = colecao[j]
+                    colecao[j] = tmp
     
     def print_list_cliente(self): #printar ciente
             current_node = self.head
