@@ -806,31 +806,37 @@ class View:
                         valor_vd = self.clientes_lista.encontrar_valor_despesas_cliente_atual(self.clientes_lista, i)         #
                         self.tree.insert("", "end", values=(categoria_vd, descricao_vd, valor_vd, data_vd)) #insere os valors na tree da data selecionada
 
+        switch_button_data = ttk.Button(self.janela, text="Gráfico", command=self.grafico_pizza) #botao que ordena data
+        switch_button_data.grid(row=0, column=0)
+
         switch_button_categoria = ttk.Button(self.janela, text="Categoria [ASC]", command=ordenar_categoria) #botao que ordena categoria
-        switch_button_categoria.grid(row=0, column=0)
+        switch_button_categoria.grid(row=0, column=1)
 
         switch_button_valor = ttk.Button(self.janela, text="Valor [ASC]", command=ordenar_valor) #botao que ordena valor
-        switch_button_valor.grid(row=0, column=1)
+        switch_button_valor.grid(row=0, column=2)
 
         switch_button_data = ttk.Button(self.janela, text="Data [ASC]", command=ordenar_data) #botao que ordena data
-        switch_button_data.grid(row=0, column=2)
+        switch_button_data.grid(row=0, column=3)
 
         categorias.insert(0, "Todas")                                                                               #
         combo_categoria = ttk.Combobox(self.janela, values=categorias, state="readonly")                            #
         combo_categoria.bind("<<ComboboxSelected>>", lambda event: filtrar_por_categoria(combo_categoria.get()))    # Combobox para filtrar categorias 
         combo_categoria.current(0)                                                                                  #
-        combo_categoria.grid(row=0, column=3)                                                                       #
+        combo_categoria.grid(row=0, column=4)                                                                       #
 
         datas.insert(0, "Todas")                                                                                    #
         combo_data = ttk.Combobox(self.janela, values=datas, state="readonly")                                      #
         combo_data.bind("<<ComboboxSelected>>", lambda event: filtrar_por_data(combo_data.get()))                   # Combobox para filtrar datas
         combo_data.current(0)                                                                                       #
-        combo_data.grid(row=0, column=4)                                                                            #
+        combo_data.grid(row=0, column=5)                                                                            #
 
-        self.tree.grid(row=1, column=0, columnspan=5)
+        self.tree.grid(row=1, column=0, columnspan=6)
 
         self.janela.mainloop()
-        
+
+    def grafico_pizza(self):
+        print("ola")
+
     def frame_definir_orcamento(self): #frame ver orçamento
         if self.frame:
             self.frame.destroy()    #eliminar a frame
