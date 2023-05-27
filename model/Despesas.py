@@ -26,4 +26,13 @@ class Despesas:
         return self.data
     def set_data(self, nova_data): #mete data
         self.data = nova_data
+
+    def to_dict(self):
+        return {
+            "categoria": self.categoria,
+            "descricao": self.descricao,
+            "valor": self.valor,
+            "data": self.data
+        }
+
     

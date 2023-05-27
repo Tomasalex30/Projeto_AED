@@ -3,6 +3,7 @@ import re
 import random
 import datetime
 import locale
+import json
 import matplotlib.pyplot as plt #fazer pip install matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import messagebox , ttk
@@ -41,6 +42,7 @@ class View:
         self.count_orcamento = 0
     
     def frame_login(self):   #frame login 
+        
         if self.frame:
             self.frame.destroy() #destruição da frame
         
@@ -52,7 +54,7 @@ class View:
         self.master.resizable(False, False) #Não permite ampliar
         self.frame = tk.Frame(self.master)
         self.frame.pack()
-
+        
         self.label = tk.Label(self.frame, text="USERNAME")
         self.label.grid(row=0, column=0)   #label password
         self.nome_entry = tk.Entry(self.frame)  #Entrada para escrever username- pag. inicial
@@ -73,7 +75,7 @@ class View:
         self.register_button = tk.Button(self.frame, text="REGISTAR", command=self.frame_registo) #ver nova frame
         self.register_button.grid(row=5, column=0)  #Botao Registar - pag inicial
 
-        self.quit_button = tk.Button(self.frame, text="SAIR", command=exit)
+        self.quit_button = tk.Button(self.frame, text="SAIR", command=self.save_lists_to_json)
         self.quit_button.grid(row=6, column=0)  #Botao Sair do programa - pag inicial
 
     def login(self):
@@ -988,3 +990,24 @@ class View:
     def verificar_numerico(self, valor): #função para apenas escrever numerico ou .
         return re.match(r"^\d*\.?\d*$", valor) is not None #biblioteca para verificar se o valor escrito é numerico ou um .
     
+    def save_lists_to_json(self):
+        filename = "dados.json"
+        data = {
+            "clientes": self.clientes_lista.to_json(),
+            "despesas": self.despesas_lista.to_json(),
+            "orcamento": self.orcamento_lista.to_json()
+        }
+
+        with open(filename, 'w') as json_file:
+            json.dump(data, json_file)
+
+        if self.frame:
+            exit()
+
+    def load_lists_from_json(self, dados):
+        with open(dados.json, 'r') as json_file:
+            data = json.load(json_file)
+
+        self.clientes_lista.from_json(data["clientes"])
+        self.despesas_lista.from_json(data["despesas"])
+        self.orcamento_lista.from_json(data["orcamento"])

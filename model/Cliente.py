@@ -31,3 +31,9 @@ class Cliente:
     def set_lista(self, nova_lista): #mete lista
         self.lista = nova_lista
 
+    def to_dict(self):
+        return {
+            "nome": self.nome,
+            "password": self.password,
+            "nif": self.nif
+        }

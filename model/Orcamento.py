@@ -14,3 +14,9 @@ class Orcamento:
         return self.orcamento
     def set_orcamento(self, novo_orcamento): #mete valor
         self.valor = novo_orcamento
+
+    def to_dict(self):
+        return {
+            "gastos_mes": self.gastos_mes,
+            "orcamento": self.orcamento
+        }

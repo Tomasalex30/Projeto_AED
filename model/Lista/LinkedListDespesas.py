@@ -73,3 +73,11 @@ class LinkedListDespesas:
     #         total += current_node.value.get_valor()
     #         current_node = current_node.next
     #     return total
+
+    def to_json(self):
+        json_data = []
+        current = self.head
+        while current:
+            json_data.append(current.value.to_dict())
+            current = current.next
+        return json_data

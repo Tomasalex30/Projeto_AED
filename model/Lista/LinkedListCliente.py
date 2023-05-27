@@ -283,3 +283,11 @@ class LinkedListCliente:
                 print("  Gastos para o mês:", orcamento.get_gastos_mes())
                 print()
             current_node = current_node.next
+
+    def to_json(self):
+        json_data = []
+        current = self.head
+        while current:
+            json_data.append(current.value.to_dict())
+            current = current.next
+        return json_data
