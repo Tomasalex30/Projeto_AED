@@ -3,8 +3,8 @@ import re
 import random
 import datetime
 import locale
-# import matplotlib.pyplot as plt
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt #fazer pip install matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import messagebox , ttk
 from model.Cliente import * 
 from model.Despesas import *
@@ -470,20 +470,20 @@ class View:
             messagebox.showinfo("Erro", "Apenas é possivel depositar despesas no mês atual")    # Erro logico de variaveis
             verificacao_despesas_2 = False        
         
-            if verificacao_despesas_2 == False:
-                if self.frame:
-                    self.frame.destroy()                #destruir a frame
-                    self.frame_adicionar_despesas()     #aceder a frame adicionar despesas
-            
-            if verificacao_despesas_2 == 1:
-                if self.frame:
-                    self.frame.destroy()   #destruir a frame   
-                    self.frame_menu()      #aceder a frame anterior
+        if verificacao_despesas_2 == False:
+            if self.frame:
+                self.frame.destroy()                #destruir a frame
+                self.frame_adicionar_despesas()     #aceder a frame adicionar despesas
+        
+        if verificacao_despesas_2 == 1:
+            if self.frame:
+                self.frame.destroy()   #destruir a frame   
+                self.frame_menu()      #aceder a frame anterior
 
-            if verificacao_despesas_2 == True:
-                if self.frame:
-                    self.frame.destroy()    #destruir a frame
-                    self.frame_menu()       #aceder a frame anterior
+        if verificacao_despesas_2 == True:
+            if self.frame:
+                self.frame.destroy()    #destruir a frame
+                self.frame_menu()       #aceder a frame anterior
     
     def sugestoes(self):
         username_atual = self.username
@@ -639,7 +639,7 @@ class View:
             count_alimentação = int(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, lista_alimentacao[0]))
             count_habitacao = int(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, lista_habitacao[0]))
             count_lazer = int(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, lista_lazer[0]))
-            count_transportes = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, lista_transportes[0]))
+            count_transportes = float(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, lista_transportes[0]))
             count_outros = float(self.clientes_lista.calcular_count_despesas_categoria_cliente_atual(self.clientes_lista, lista_outros[0]))
 
             lista_count_categorias = []
@@ -835,7 +835,45 @@ class View:
         self.janela.mainloop()
 
     def grafico_pizza(self):
-        print("ola")
+        username_atual = self.username
+        password_atual = self.password
+        self.clientes_lista.cliente_logado(username_atual, password_atual)     #Encontrar utilizador atual
+        
+        soma_alimentacao = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, "Alimentação"))
+        soma_habitacao = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, "Habitação"))
+        soma_lazer = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, "Lazer"))
+        soma_transportes = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, "Transportes"))
+        soma_outros = float(self.clientes_lista.calcular_total_despesas_categoria_atual(self.clientes_lista, "Outros"))
+
+        valores = [soma_alimentacao, soma_habitacao, soma_lazer, soma_transportes, soma_outros]
+        labels = ["Alimentação", "Habitação", "Lazer", "Transportes", "Outros"]
+
+        # Filtrar as categorias com valores zero
+        valores_filtrados = []
+        labels_filtrados = []
+        for valor, label in zip(valores, labels):
+            if valor != 0:
+                valores_filtrados.append(valor)
+                labels_filtrados.append(label)
+
+        # Criar o gráfico de pizza apenas com as categorias com valores diferentes de zero
+        fig, ax = plt.subplots()
+        wedges, texts, autotexts = ax.pie(valores_filtrados, labels=labels_filtrados, autopct='%1.1f%%', startangle=90)
+        ax.set_title('Gastos por Categoria')
+
+        # Exibir os valores das categorias abaixo do gráfico
+        total = sum(valores_filtrados)
+        percent_format = '%1.1f%%'
+        for i, (label, autotext) in enumerate(zip(labels_filtrados, autotexts)):
+            percent = valores_filtrados[i] / total * 100
+            value_label = f'{valores_filtrados[i]:.2f}€'
+            autotext.set_text(f'{value_label}\n({percent_format % percent})')
+
+        # Ajustar o layout para evitar sobreposição das anotações
+        plt.tight_layout()
+
+        # Exibir o gráfico
+        plt.show()
 
     def frame_definir_orcamento(self): #frame ver orçamento
         if self.frame:
