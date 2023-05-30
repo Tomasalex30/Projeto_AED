@@ -53,10 +53,18 @@ class LinkedListOrcamento:
             print()
             current_node = current_node.next
 
-    def to_json(self):
+    def to_json(self):   #Passar dde linked list para dicionario
         json_data = []
         current = self.head
         while current:
             json_data.append(current.value.to_dict())
             current = current.next
         return json_data
+    
+    def from_json(self, json_data):          #Passar de dicionario para linked list
+        self.head = None
+        self.tail = None
+        for item in json_data:
+            orcamento_dict = item  
+            orcamento = Orcamento(orcamento_dict["gastos_mes"], orcamento_dict["orcamento"])
+            self.append_orcamento(orcamento)

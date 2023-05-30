@@ -1,1 +1,1 @@
-{"clientes": [{"nome": "11", "password": "1111111111111111", "nif": "111111111"}], "despesas": [], "orcamento": []}
+{"clientes": [{"nome": "111", "password": "1111111111111111", "nif": "111111111"}, {"nome": "22", "password": "2222222222222222", "nif": "222222222"}], "despesas": [{"gastos_mes": 111.0, "orcamento": 1111.0}, {"categoria": "Alimenta\u00e7\u00e3o", "descricao": "11", "valor": 1.0, "data": "30/05/2023"}], "orcamento": []}

@@ -24,6 +24,7 @@ class View:
         self.despesas_lista = LinkedListDespesas()
         self.orcamento_lista = LinkedListOrcamento()
         self.master = master
+        self.load_lists_from_json()
         self.master.geometry("500x300")
         self.master.title("Inicio")
         self.master.resizable(False, False)
@@ -1004,10 +1005,38 @@ class View:
         if self.frame:
             exit()
 
-    def load_lists_from_json(self, dados):
-        with open(dados.json, 'r') as json_file:
-            data = json.load(json_file)
+    #def load_lists_from_json(self):
+    #    filename = "dados.json"
+    #    with open(filename, 'r') as json_file:
+    #        data = json.load(json_file)
+#
+   #     self.clientes_lista.from_json(data["clientes"])
+   #     self.despesas_lista.from_json(data["despesas"])
+   #     self.orcamento_lista.from_json(data["orcamento"])
+    def from_json(self, json_data):              #Passar de dicionario para linked list
+        self.head = None
+        self.tail = None
+        self.cliente_atual = None
+        for item in json_data:
+            cliente_dict = item  
+            client = Cliente(cliente_dict["nome"], cliente_dict["password"], cliente_dict["nif"])
+            client.despesas.from_json(cliente_dict["despesas"])  
+            client.orcamento.from_json(cliente_dict["orcamento"])  
+            self.append_cliente(client)
 
-        self.clientes_lista.from_json(data["clientes"])
-        self.despesas_lista.from_json(data["despesas"])
-        self.orcamento_lista.from_json(data["orcamento"])
+    
+    def load_lists_from_json(self):
+        # Verificar se existem os arquivos JSON correspondentes às listas
+        if os.path.exists("clientes.json") and os.path.exists("despesas.json") and os.path.exists("orcamento.json"):
+            # Carregar os dados dos arquivos JSON
+            with open("clientes.json", "r") as file:
+                clientes_json = json.load(file)
+            with open("despesas.json", "r") as file:
+                despesas_json = json.load(file)
+            with open("orcamento.json", "r") as file:
+                orcamento_json = json.load(file)
+
+            # Transformar os dados JSON em listas
+            self.from_json(clientes_json)
+            self.despesas_lista.from_json(despesas_json)
+            self.orcamento_lista.from_json(orcamento_json)

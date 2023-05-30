@@ -74,10 +74,18 @@ class LinkedListDespesas:
     #         current_node = current_node.next
     #     return total
 
-    def to_json(self):
+    def to_json(self):     #Passar dde linked list para dicionario
         json_data = []
         current = self.head
         while current:
             json_data.append(current.value.to_dict())
             current = current.next
         return json_data
+    
+    def from_json(self, json_data):           #Passar de dicionario para linked list
+        self.head = None
+        self.tail = None
+        for item in json_data:
+            despesas_dict = item  # Assuming each item in json_data is a dictionary representing a node value (despesas)
+            despesas = Despesas(despesas_dict["categoria"], despesas_dict["descricao"], despesas_dict["valor"], despesas_dict["data"])
+            self.append_despesas(despesas)

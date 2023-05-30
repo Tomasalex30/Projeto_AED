@@ -1,10 +1,9 @@
 from model.Lista.Nodes import *
-from model.Cliente import *
+from model.Cliente import * 
 from model.Despesas import *
 from model.Orcamento import *
-from view import *
 import os
-
+      
 class LinkedListCliente:
     def __init__(self): #construtor
         self.head = None
@@ -57,7 +56,7 @@ class LinkedListCliente:
         else:
             return False
          
-    def calcular_total_despesas_cliente_atual(slef, lista_clientes):
+    def calcular_total_despesas_cliente_atual(self, lista_clientes):
         if lista_clientes.cliente_atual is None:
             return 0
         total_despesas = 0
@@ -70,7 +69,7 @@ class LinkedListCliente:
         lista_clientes.cliente_atual.total_despesas = total_despesas
         return total_despesas
     
-    def calcular_total_despesas_categoria_atual(slef, lista_clientes, categoria):
+    def calcular_total_despesas_categoria_atual(self, lista_clientes, categoria):
         if lista_clientes.cliente_atual is None:
             return 0
         total_despesas = 0
@@ -284,10 +283,28 @@ class LinkedListCliente:
                 print()
             current_node = current_node.next
 
-    def to_json(self):
+    def to_json(self):    #Passar dde linked list para dicionario
         json_data = []
         current = self.head
         while current:
             json_data.append(current.value.to_dict())
             current = current.next
         return json_data
+    
+    def from_json(self, json_data):
+        self.head = None
+        self.tail = None
+        self.cliente_atual = None
+        for item in json_data:
+            cliente_dict = item
+            client = Cliente(cliente_dict["nome"], cliente_dict["password"], cliente_dict["nif"])
+            despesas_data = cliente_dict["despesas"]
+            orcamento_data = cliente_dict["orcamento"]
+            for despesa_dict in despesas_data:
+                despesa = Despesas(despesa_dict["categoria"], despesa_dict["descricao"], despesa_dict["valor"], despesa_dict["data"])
+                client.despesas.append_despesas(despesa)
+            for orcamento_dict in orcamento_data:
+                orcamento = Orcamento(orcamento_dict["gastos_mes"], orcamento_dict["orcamento"])
+                client.orcamento.append_orcamento(orcamento)
+            self.append_cliente(client)
+
