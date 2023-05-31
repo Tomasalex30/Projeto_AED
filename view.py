@@ -45,41 +45,44 @@ class View:
     def frame_login(self):   #frame login 
         
         if self.frame:
-            self.frame.destroy() #destruição da frame
-        
-        self.frame = tk.Frame(self.master) #recriação da frame
-        self.frame.pack()
+            self.frame.destroy() #destruição da frame   
 
-        self.master.geometry("500x300")
+        self.master.geometry("455x330")
         self.master.title("Login")              
         self.master.resizable(False, False) #Não permite ampliar
         self.frame = tk.Frame(self.master, bg="#0076a3")
         self.frame.pack(fill=tk.BOTH , expand=True)
         self.invisivel = tk.Label(self.frame, text="                                       ", bg="#0076a3")#Para ficar direito com o resto
         self.invisivel.grid(row=0,column=0)
+
+        frame = "imagens/UAL_frame.png"
+        self.logo = tk.PhotoImage(file=frame)
+        self.logo = self.logo.subsample(3)
+        self.logo_label = tk.Label(self.frame, image= self.logo)
+        self.logo_label.grid(row=0, column=3)
         
         self.label = tk.Label(self.frame, text="USERNAME",font=("Arial"), fg="#ffffff", bg="#0076a3")
-        self.label.grid(row=0, column=0)   #label password
+        self.label.grid(row=1, column=1)   #label password
         self.nome_entry = tk.Entry(self.frame)  #Entrada para escrever username- pag. inicial
-        self.nome_entry.grid(row=1, column=0, pady=5)   
+        self.nome_entry.grid(row=2, column=1, pady=5)   
 
         self.password_label = tk.Label(self.frame, text="PASSWORD",font=("Arial"), fg="#ffffff", bg="#0076a3")
-        self.password_label.grid(row=2, column=0)  #label password
+        self.password_label.grid(row=3, column=1)  #label password
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)  #Entrada para escrever password- pag. inicial
-        self.password_entry.grid(row=3, column=0)
+        self.password_entry.grid(row=4, column=1)
 
-        self.voltar_button = tk.Button(self.frame, text="VER/OCULTAR",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.ver_login)
-        self.voltar_button.grid(row=3, column=1) #Botao ver/ocultar password - pag inicial
+        self.voltar_button = tk.Button(self.frame, text="VER/OCULTAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.ver_login)
+        self.voltar_button.grid(row=4, column=2) #Botao ver/ocultar password - pag inicial
 
-        self.login_button = tk.Button(self.frame, text="LOGIN",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.login)
-        self.login_button.grid(row=4, column=0) #Botao Login - pag inicial
+        self.login_button = tk.Button(self.frame, text="LOGIN",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.login)
+        self.login_button.grid(row=5, column=1) #Botao Login - pag inicial
         
-        self.register_button = tk.Button(self.frame, text="REGISTAR",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.frame_registo) #ver nova frame
-        self.register_button.grid(row=5, column=0)  #Botao Registar - pag inicial
+        self.register_button = tk.Button(self.frame, text="REGISTAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.frame_registo) #ver nova frame
+        self.register_button.grid(row=6, column=1)  #Botao Registar - pag inicial
 
-        self.quit_button = tk.Button(self.frame, text="SAIR",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.save_lists_to_json)
-        self.quit_button.grid(row=6, column=0)  #Botao Sair do programa - pag inicial
+        self.quit_button = tk.Button(self.frame, text="SAIR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.save_lists_to_json)
+        self.quit_button.grid(row=7, column=1)  #Botao Sair do programa - pag inicial
 
     def login(self):
             username_login = self.nome_entry.get()      #username logado no momento
@@ -144,41 +147,41 @@ class View:
     def frame_registo(self):      #frame registo
         if self.frame:
             self.frame.destroy()    #Destruicao da frame
-        
-        self.frame = tk.Frame(self.master, bg="#0076a3")
-        self.frame.pack()                   #Recriacao da frame
 
-        self.master.geometry("500x300")
+        
+        self.master.geometry("420x320")
         self.master.title("Registo")
         self.master.resizable(False, False)
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()                       #Dimensoes da frame
- 
-        self.nome_label = tk.Label(self.frame, text="USERNAME")
-        self.nome_label.grid(row=0, column=0)   
-        self.nome_entry = tk.Entry(self.frame)
-        self.nome_entry.grid(row=1, column=0, pady=5)   #Entrada para username- pag. registo
+        self.frame = tk.Frame(self.master, bg="#0076a3")
+        self.frame.pack(fill=tk.BOTH , expand = True)                       #Dimensoes da frame
+        self.invisivel = tk.Label(self.frame,text="         ", bg="#0076a3")#Para ficar direito com o resto
+        self.invisivel.grid(row=0,column=0)
 
-        self.password_label = tk.Label(self.frame, text="PASSWORD")
-        self.password_label.grid(row=2, column=0)  
+        self.nome_label = tk.Label(self.frame, text="USERNAME", font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.nome_label.grid(row=1, column=1)   
+        self.nome_entry = tk.Entry(self.frame)
+        self.nome_entry.grid(row=2, column=1, pady=5)   #Entrada para username- pag. registo
+
+        self.password_label = tk.Label(self.frame, text="PASSWORD", font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.password_label.grid(row=3, column=1)  
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)
-        self.password_entry.grid(row=3, column=0)          #Entrada para password - pag. registo
+        self.password_entry.grid(row=4, column=1)          #Entrada para password - pag. registo
 
-        self.password_label_2 = tk.Label(self.frame, text="REPETIR PASSWORD")
-        self.password_label_2.grid(row=4, column=0)   
+        self.password_label_2 = tk.Label(self.frame, text="REPETIR PASSWORD", font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.password_label_2.grid(row=5, column=1)   
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry_2 = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)
-        self.password_entry_2.grid(row=5, column=0)              # Entrada para repetir password - pag.registo
+        self.password_entry_2.grid(row=6, column=1)              # Entrada para repetir password - pag.registo
 
-        self.info_password = tk.Label(self.frame, text="A palavra passe deve ter no máximo 16 carácteres")
-        self.info_password.grid(row=10, column=0)
+        self.info_password = tk.Label(self.frame, text="A palavra passe deve ter no máximo 16 carácteres",font=("Arial",8), fg="#ffffff", bg="#0076a3")
+        self.info_password.grid(row=11, column=1)
 
-        self.ver_ocultar_button = tk.Button(self.frame, text="VER/OCULTAR", command=self.ver_registo)
-        self.ver_ocultar_button.grid(row=3, column=1)      #Botão para ver/ocultar a password- pag. registo
+        self.ver_ocultar_button = tk.Button(self.frame, text="VER/OCULTAR", font=("Arial",10), fg="#000000", bg="#ffffff", command=self.ver_registo)
+        self.ver_ocultar_button.grid(row=4, column=2)      #Botão para ver/ocultar a password- pag. registo
          
-        self.nif_label = tk.Label(self.frame, text="NIF")
-        self.nif_label.grid(row=6, column=0)
+        self.nif_label = tk.Label(self.frame, text="NIF", font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.nif_label.grid(row=7, column=1)
         def validar_nif(entrada):                                 
             if entrada.isdigit() and len(entrada) <= 9:              #Funcao de funcionamento do NIF
                 return True
@@ -186,14 +189,14 @@ class View:
                 return False
         validacao_nif = self.master.register(validar_nif)
         self.nif_entry = tk.Entry(self.frame, validate='key', validatecommand=(validacao_nif, '%P'), width=9)
-        self.nif_entry.grid(row=7, column=0, pady=5)  #Entrada para o NIF - pag registo
+        self.nif_entry.grid(row=8, column=1, pady=5)  #Entrada para o NIF - pag registo
         
-        self.login_button = tk.Button(self.frame, text="REGISTAR", command=self.registar)
-        self.login_button.grid(row=8, column=0) #Botao para registar - pag registo
+        self.login_button = tk.Button(self.frame, text="REGISTAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.registar)
+        self.login_button.grid(row=9, column=1) #Botao para registar - pag registo
         
-        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_login)
-        self.voltar_button.grid(row=9, column=0)    #Botao para voltar para a pag inicial - pag. registo
-    
+        self.voltar_button = tk.Button(self.frame, text="VOLTAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.frame_login)
+        self.voltar_button.grid(row=10, column=1)    #Botao para voltar para a pag inicial - pag. registo
+   
     def registar(self): #função registar                                              
             nome_registo = self.nome_entry.get()
             password_registo = self.password_entry.get()             
@@ -244,7 +247,7 @@ class View:
             if verificacao_registo == True:
                 cliente = Cliente(nome_registo,password_registo,nif)
                 self.clientes_lista.append_cliente(cliente)
-                self.clientes_lista.print_list_cliente()
+                #self.clientes_lista.print_list_cliente()  #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
                 messagebox.showinfo("Sucesso", "Registo bem-sucedido")   #Condicao caso todos os dados de registo estejam corretos
                     
                 if self.frame:
@@ -263,43 +266,58 @@ class View:
 
         if self.frame:
             self.frame.destroy() #destruição frame
-        
-        self.frame = tk.Frame(self.master, bg="#0076a3") #recriação frame
-        self.frame.pack()
 
-        self.master.geometry("500x300")
+        self.master.geometry("330x320")
         self.master.title("Menu")           #delimitador frame
         self.master.resizable(False, False)
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()
+        self.frame = tk.Frame(self.master, bg="#0076a3")
+        self.frame.pack(fill=tk.BOTH , expand = True)
         
-        self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ", command=self.frame_adicionar_despesas) #botao adicionar despesas
-        self.adicionar_depesas.grid(row=3 , column=1,)
+        self.invisivel = tk.Label(self.frame,text="         ", bg="#0076a3")#Para ficar direito com o resto
+        self.invisivel.grid(row=0,column=0)
+        frame_1 = "imagens/despesas.png"
+        self.logo_despesas = tk.PhotoImage(file=frame_1)
+        self.logo_despesas = self.logo_despesas.subsample(3)
+        self.logo_label = tk.Label(self.frame, image= self.logo_despesas, bg="#0076a3")
+        self.logo_label.grid(row=3, column=3)
+        self.adicionar_depesas = tk.Button( self.frame ,text = "Adicionar despesas: ",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.frame_adicionar_despesas) #botao adicionar despesas
+        self.adicionar_depesas.grid(row=3 , column=1)
         
-        self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: ", command = self.frame_ver_despesa) #botao ver despesas
+        frame_2 = "imagens/ver_despesas.png"
+        self.logo_ver_despesas = tk.PhotoImage(file=frame_2)
+        self.logo_ver_despesas = self.logo_ver_despesas.subsample(3)
+        self.logo_label = tk.Label(self.frame, image= self.logo_ver_despesas, bg="#0076a3")
+        self.logo_label.grid(row=5, column=3)
+        self.ver_depesas = tk.Button( self.frame , text = "Ver despesas: ",font=("Arial",10), fg="#000000", bg="#ffffff", command = self.frame_ver_despesa) #botao ver despesas
         self.ver_depesas.grid(row=5 , column=1,)
         
-        self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:", command= self.frame_definir_orcamento) #botao definir orçamento
+        frame_3 = "imagens/orcamento.png"
+        self.logo_orcamento = tk.PhotoImage(file=frame_3)
+        self.logo_orcamento = self.logo_orcamento.subsample(3)
+        self.logo_label = tk.Label(self.frame, image= self.logo_orcamento, bg="#0076a3")
+        self.logo_label.grid(row=7, column=3)
+        self.orcamento = tk.Button(self.frame ,  text= "Definir orçamento mensal:",font=("Arial",10), fg="#000000", bg="#ffffff", command= self.frame_definir_orcamento) #botao definir orçamento
         self.orcamento.grid(row=7 , column=1)
 
-        self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT", command= self.frame_login) #botao voltar
+        self.sign_out = tk.Button(self.frame ,  text= "SIGN OUT",font=("Arial",10), fg="#000000", bg="#ffffff", command= self.frame_login) #botao voltar
         self.sign_out.grid(row=9 , column=1)
 
     def frame_adicionar_despesas(self):
         if self.frame:
             self.frame.destroy()
 
-        self.frame = tk.Frame(self.master, bg="#0076a3")
-        self.frame.pack()
-
-        self.master.geometry("500x300")
-        self.master.title("Adicionar Despesas")
+        self.master.geometry("700x250")
+        self.master.title("Adicionar Despesas")     #delimitador frame
         self.master.resizable(False, False)
-
+        self.frame = tk.Frame(self.master, bg="#0076a3")
+        self.frame.pack(fill=tk.BOTH , expand=True)
+        self.invisivel = tk.Label(self.frame, text="                               ", bg="#0076a3")#Para ficar direito com o resto
+        self.invisivel.grid(row=0,column=0)
+        
         locale.setlocale(locale.LC_ALL, 'pt_PT')
 
-        self.label = tk.Label(self.frame, text="Categoria da despesa")
-        self.label.grid(row=0, column=0)
+        self.label = tk.Label(self.frame, text="Categoria da despesa",font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.label.grid(row=1, column=1)
 
         self.combo = ttk.Combobox(
             self.frame,
@@ -307,34 +325,34 @@ class View:
             values=["Selecione a Categoria", "Alimentação", "Lazer", "Habitação", "Transportes", "Outros"]
         )
 
-        self.combo.grid(row=0, column=1)
+        self.combo.grid(row=1, column=2)
         self.combo.current(0)
 
-        self.descricao_label = ttk.Label(self.frame, text="Descrição")
-        self.descricao_label.grid(row=1, column=0)
+        self.descricao_label = tk.Label(self.frame, text="Descrição",font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.descricao_label.grid(row=2, column=1)
         self.descricao_entry = tk.Entry(self.frame)
-        self.descricao_entry.grid(row=1, column=1, pady=5)
+        self.descricao_entry.grid(row=2, column=2, pady=5)
 
-        self.valor_label = ttk.Label(self.frame, text="Valor da despesa")
-        self.valor_label.grid(row=2, column=0)
+        self.valor_label = tk.Label(self.frame, text="Valor da despesa",font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.valor_label.grid(row=3, column=1)
         self.valor_entry = tk.Entry(self.frame)
-        self.valor_entry.grid(row=2, column=1, pady=5)
+        self.valor_entry.grid(row=3, column=2, pady=5)
         valor_numerico = self.master.register(self.verificar_numerico)
         self.valor_entry.config(validate="key", validatecommand=(valor_numerico, "%P"))
 
-        self.data_label = ttk.Label(self.frame, text="Data da despesa")
-        self.data_label.grid(row=3, column=0)
+        self.data_label = tk.Label(self.frame, text="Data da despesa",font=("Arial"), fg="#ffffff", bg="#0076a3")
+        self.data_label.grid(row=4, column=1)
         self.data_entry = DateEntry(self.frame, locale='pt_PT', date_pattern="dd/mm/yyyy")
-        self.data_entry.grid(row=3, column=1, pady=5)
+        self.data_entry.grid(row=4, column=2, pady=5)
 
-        self.adicionar_button = tk.Button(self.frame, text="ADICIONAR", command=self.adicionar_despesas)
-        self.adicionar_button.grid(row=4, column=0)
+        self.adicionar_button = tk.Button(self.frame, text="ADICIONAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.adicionar_despesas)
+        self.adicionar_button.grid(row=5, column=1)
         
-        self.adicionar_button = tk.Button(self.frame, text="SUGESTÕES", command=self.sugestoes)
-        self.adicionar_button.grid(row=4, column=1)
+        self.adicionar_button = tk.Button(self.frame, text="SUGESTÕES",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.sugestoes)
+        self.adicionar_button.grid(row=5, column=2)
 
-        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu)
-        self.voltar_button.grid(row=4, column=2)
+        self.voltar_button = tk.Button(self.frame, text="VOLTAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.frame_menu)
+        self.voltar_button.grid(row=5, column=3)
 
         gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))
         orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))
@@ -343,15 +361,15 @@ class View:
         resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual
         
         if gastos_mes_cliente_atual != 0 or orcamento_cliente_atual != 0:
-            self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_gastos_mes}€ de limite de gastos do mês")
-            self.nome_label.grid(row=5, column=1)
-            self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_orcamento}€ de orçamento")
-            self.nome_label.grid(row=6, column=1)
+            self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_gastos_mes}€ de limite de gastos do mês",font=("Arial"), fg="#ffffff", bg="#0076a3")
+            self.nome_label.grid(row=6, column=2)
+            self.nome_label = tk.Label(self.frame, text=f"Resta-lhe {resto_orcamento}€ de orçamento",font=("Arial"), fg="#ffffff", bg="#0076a3")
+            self.nome_label.grid(row=7, column=2)
         else:
-            self.nome_label = tk.Label(self.frame, text=f"Não tem limite de gastos do mês")
-            self.nome_label.grid(row=5, column=1)
-            self.nome_label = tk.Label(self.frame, text=f"Não têm orçamento")
-            self.nome_label.grid(row=6, column=1)
+            self.nome_label = tk.Label(self.frame, text=f"Não tem limite de gastos do mês", font=("Arial"), fg="#ffffff", bg="#0076a3")
+            self.nome_label.grid(row=6, column=2)
+            self.nome_label = tk.Label(self.frame, text=f"Não têm orçamento", font=("Arial"), fg="#ffffff", bg="#0076a3")
+            self.nome_label.grid(row=7, column=2)
     
     def adicionar_despesas(self): #função adicionar despesas
         categoria = self.combo.get() #valor entry categoria
@@ -359,6 +377,7 @@ class View:
         valor = self.valor_entry.get() #valor entry valor
         data = self.data_entry.get() #valor entry data
 
+        verificacao_despesas_2 = None
         verificacao_despesas = True
         if len(descricao) > 160:
             messagebox.showinfo("Erro", "Descrição demasiado longa!") #verificacao mensagem longa 
@@ -372,108 +391,109 @@ class View:
         if categoria == "Selecione a Categoria": #verificacao categoria invalida
             messagebox.showinfo("Erro", "Categoria Inválida")
             verificacao_despesas = False
-
+            
         if verificacao_despesas == False:
             if self.frame:
-                self.frame.destroy()
-                self.frame_adicionar_despesas()
+                self.frame.destroy()                #destruir a frame
+                self.frame_adicionar_despesas() 
 
         dia_selecionado = int(data.split("/")[0])
         mes_selecionado = int(data.split('/')[1])
         ano_selecionado = int(data.split("/")[2])
-        print("Dia selecionado:", dia_selecionado)
-        print("Mês selecionado:", mes_selecionado)
-        print("Ano selecionado:", ano_selecionado)
+        # print("Dia selecionado:", dia_selecionado) 
+        # print("Mês selecionado:", mes_selecionado)   #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
+        # print("Ano selecionado:", ano_selecionado) 
         
         dia_atual = datetime.datetime.now().day
         mes_atual = datetime.datetime.now().month
         ano_atual = datetime.datetime.now().year
-        print("Dia atual:", dia_atual)
-        print("Mês atual:", mes_atual)
-        print("Ano atual:", ano_atual)
+        # print("Dia atual:", dia_atual)
+        # print("Mês atual:", mes_atual)    #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
+        # print("Ano atual:", ano_atual)
 
-        if mes_selecionado == mes_atual:
-            if ano_selecionado == ano_atual:
-                if dia_selecionado <= dia_atual:  
+        if verificacao_despesas == True:
+            if mes_selecionado == mes_atual:
+                if ano_selecionado == ano_atual:
+                    if dia_selecionado <= dia_atual:  
 
-                    if verificacao_despesas == True:
-                        verificacao_despesas_2 = True
-                        self.valor_final_verificacao = float(valor)
-                        despesa = Despesas(categoria, descricao, self.valor_final_verificacao, data) #adicionar as despesas na classe Despesa
-                        self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
-                        
-                        username_atual = self.username
-                        password_atual = self.password
-                        self.clientes_lista.cliente_logado(username_atual, password_atual) #Encontrar utilizador atual
-                        
-                        if self.clientes_lista.verificar_orcamento() != 1:
-                            gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))         #
-                            orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))           #
-                            total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))  # encontrar e defenir vareaveis do utilizador atual
-                            resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual                                            #
-                            resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual                                              #
+                        if verificacao_despesas == True:
+                            verificacao_despesas_2 = True
+                            self.valor_final_verificacao = float(valor)
+                            despesa = Despesas(categoria, descricao, self.valor_final_verificacao, data) #adicionar as despesas na classe Despesa
+                            self.despesas_lista.append_despesas(despesa) #adicionar as despesas na linked list
                             
-                            if resto_gastos_mes > 0:
+                            username_atual = self.username
+                            password_atual = self.password
+                            self.clientes_lista.cliente_logado(username_atual, password_atual) #Encontrar utilizador atual
+                            
+                            if self.clientes_lista.verificar_orcamento() != 1:
+                                gastos_mes_cliente_atual = float(self.clientes_lista.encontrar_gastos_mes_cliente_atual(self.clientes_lista))         #
+                                orcamento_cliente_atual = float(self.clientes_lista.encontrar_orcamento_cliente_atual(self.clientes_lista))           #
+                                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))  # encontrar e defenir vareaveis do utilizador atual
+                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual                                            #
+                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual                                              #
                                 
-                                if self.valor_final_verificacao <= resto_orcamento:
-                                    confirmacao_despesa = messagebox.askyesno("Confirmação", f"Deseja submeter a despesa de:\n\nCategoria: {categoria}\nDescrição: {descricao}\nValor: {self.valor_final_verificacao}€\nData: {data}") # verificacao de operacao
+                                if resto_gastos_mes > 0:
                                     
-                                    if confirmacao_despesa == True:    
+                                    if self.valor_final_verificacao <= resto_orcamento:
+                                        confirmacao_despesa = messagebox.askyesno("Confirmação", f"Deseja submeter a despesa de:\n\nCategoria: {categoria}\nDescrição: {descricao}\nValor: {self.valor_final_verificacao}€\nData: {data}") # verificacao de operacao
                                         
-                                        if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
-                                            self.clientes_lista.print_list_cliente_despesas_orcamento()
-                                            total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
-                                            resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual #gastos do mes atual
-                                            resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual #orcamento atual
-                                            print()
-                                            print("Total Despesas", total_despesas_cliente_atual)
-                                            print("Resto dos gastos do mes",resto_gastos_mes)
-                                            print("Resto orcamento", resto_orcamento)
-                                            messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")       # realizacao da operacao confirmada(adicionar despesa)
+                                        if confirmacao_despesa == True:    
                                             
-                                            if resto_gastos_mes < 0:
-                                                messagebox.showinfo("Aviso", "Excedeu os gastos do mês")     # Aviso excedeu gasto do mes
-                                            elif resto_gastos_mes == 0:
-                                                messagebox.showinfo("Aviso", "Gastos do mês esgotados")      #Aviso gastos dos mes esgotado
-                                            elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
-                                                messagebox.showinfo("Aviso", f"Restam menos de 10% dos seus gastos do mes")      #Aviso 10% dos gastos do mes 
-                                            elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
-                                                messagebox.showinfo("Aviso", f"Restam menos de 25% dos seus gastos do mes")      #Aviso 25% dos gastos do mes 
-                                            elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
-                                                messagebox.showinfo("Aviso", f"Restam menos de 50% dos seus gastos do mes")      #Aviso 50% dos gastos do mes 
-                                            elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
-                                                messagebox.showinfo("Aviso", f"Restam menos de 75% dos seus gastos do mês")      #Aviso 75% dos gastos do mes 
+                                            if self.clientes_lista.adicionar_despesa_cliente_logado(categoria, descricao, valor, data) == 1:
+                                                #self.clientes_lista.print_list_cliente_despesas_orcamento()#CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
+                                                total_despesas_cliente_atual = float(self.clientes_lista.calcular_total_despesas_cliente_atual(self.clientes_lista))
+                                                resto_gastos_mes = gastos_mes_cliente_atual - total_despesas_cliente_atual #gastos do mes atual
+                                                resto_orcamento = orcamento_cliente_atual - total_despesas_cliente_atual #orcamento atual
+                                                # print()
+                                                # print("Total Despesas", total_despesas_cliente_atual)
+                                                # print("Resto dos gastos do mes",resto_gastos_mes) #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
+                                                # print("Resto orcamento", resto_orcamento)
+                                                messagebox.showinfo("Sucesso", "Despesa criada com sucesso.")       # realizacao da operacao confirmada(adicionar despesa)
+                                                
+                                                if resto_gastos_mes < 0:
+                                                    messagebox.showinfo("Aviso", "Excedeu os gastos do mês")     # Aviso excedeu gasto do mes
+                                                elif resto_gastos_mes == 0:
+                                                    messagebox.showinfo("Aviso", "Gastos do mês esgotados")      #Aviso gastos dos mes esgotado
+                                                elif resto_gastos_mes <= gastos_mes_cliente_atual/10:
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 10% dos seus gastos do mes")      #Aviso 10% dos gastos do mes 
+                                                elif resto_gastos_mes <= gastos_mes_cliente_atual/4:
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 25% dos seus gastos do mes")      #Aviso 25% dos gastos do mes 
+                                                elif resto_gastos_mes <= gastos_mes_cliente_atual/2:
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 50% dos seus gastos do mes")      #Aviso 50% dos gastos do mes 
+                                                elif resto_gastos_mes <= ((gastos_mes_cliente_atual*3)/4):
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 75% dos seus gastos do mês")      #Aviso 75% dos gastos do mes 
 
-                                            if resto_orcamento == 0:
-                                                messagebox.showinfo("Aviso", "Orcamento esgotado")           #Aviso orcamento esgotado
-                                            elif resto_orcamento <= orcamento_cliente_atual/10:
-                                                messagebox.showinfo("Aviso", f"Restam menos de 10% do seu orcamento")            #Aviso 10% do orocamento 
-                                            elif resto_orcamento <= orcamento_cliente_atual/4:
-                                                messagebox.showinfo("Aviso", f"Restam menos de 25% do seu orcamento")            #Aviso 25% do orocamento 
-                                            elif resto_orcamento <= orcamento_cliente_atual/2:
-                                                messagebox.showinfo("Aviso", f"Restam menos de 50% do seu orcamento")            #Aviso 50% do orocamento 
-                                            elif resto_orcamento <= ((orcamento_cliente_atual*3)/4):
-                                                messagebox.showinfo("Aviso", f"Restam menos de 75% do seu orcamento")            #Aviso 75% do orocamento 
+                                                if resto_orcamento == 0:
+                                                    messagebox.showinfo("Aviso", "Orcamento esgotado")           #Aviso orcamento esgotado
+                                                elif resto_orcamento <= orcamento_cliente_atual/10:
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 10% do seu orcamento")            #Aviso 10% do orocamento 
+                                                elif resto_orcamento <= orcamento_cliente_atual/4:
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 25% do seu orcamento")            #Aviso 25% do orocamento 
+                                                elif resto_orcamento <= orcamento_cliente_atual/2:
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 50% do seu orcamento")            #Aviso 50% do orocamento 
+                                                elif resto_orcamento <= ((orcamento_cliente_atual*3)/4):
+                                                    messagebox.showinfo("Aviso", f"Restam menos de 75% do seu orcamento")            #Aviso 75% do orocamento 
+                                        else:
+                                            verificacao_despesas_2 = False
                                     else:
+                                        messagebox.showinfo("Erro", "Despesa maior que o orcamento")    # Erro logico de variaveis
                                         verificacao_despesas_2 = False
                                 else:
-                                    messagebox.showinfo("Erro", "Despesa maior que o orcamento")    # Erro logico de variaveis
-                                    verificacao_despesas_2 = False
+                                    messagebox.showinfo("Erro", "Excedeu os gastos do mês")  #Erro excedeu os gastos do mes
+                                    verificacao_despesas_2 = 1    
                             else:
-                                messagebox.showinfo("Erro", "Excedeu os gastos do mês")       #Erro excedeu os gastos do mes
-                                verificacao_despesas_2 = 1    
-                        else:
-                            messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")     #Erro falta de variavel importante
-                            verificacao_despesas_2 = 1
+                                messagebox.showinfo("Erro", "O cliente precisa criar um orçamento antes de adicionar despesas.")  #Erro falta de variavel importante
+                                verificacao_despesas_2 = 1
+                    else:
+                        messagebox.showinfo("Erro", "A data da despesa não pode ser posterior à data atual.")    # Erro logico de variaveis
+                        verificacao_despesas_2 = False  
                 else:
-                    messagebox.showinfo("Erro", "A data da despesa não pode ser posterior à data atual.")    # Erro logico de variaveis
+                    messagebox.showinfo("Erro", "Apenas é possivel depositar despesas no ano atual")    # Erro logico de variaveis
                     verificacao_despesas_2 = False  
             else:
-                messagebox.showinfo("Erro", "Apenas é possivel depositar despesas no ano atual")    # Erro logico de variaveis
-                verificacao_despesas_2 = False  
-        else:
-            messagebox.showinfo("Erro", "Apenas é possivel depositar despesas no mês atual")    # Erro logico de variaveis
-            verificacao_despesas_2 = False        
+                messagebox.showinfo("Erro", "Apenas é possivel depositar despesas no mês atual")    # Erro logico de variaveis
+                verificacao_despesas_2 = False        
         
         if verificacao_despesas_2 == False:
             if self.frame:
@@ -489,7 +509,7 @@ class View:
             if self.frame:
                 self.frame.destroy()    #destruir a frame
                 self.frame_menu()       #aceder a frame anterior
-    
+  
     def sugestoes(self):
         username_atual = self.username
         password_atual = self.password
@@ -649,19 +669,19 @@ class View:
 
             lista_count_categorias = []
             if count_alimentação >= count_habitacao and count_alimentação >= count_lazer and count_alimentação >= count_outros and count_alimentação >= count_transportes:
-                print (count_alimentação)
+                # print (count_alimentação) #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
                 lista_count_categorias.append(f"Alimentação: {count_alimentação} despesas")
             if count_habitacao >= count_alimentação and count_habitacao >= count_lazer and count_habitacao >= count_outros and count_habitacao >= count_transportes:
-                print (count_habitacao)
+                # print (count_habitacao) #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
                 lista_count_categorias.append(f"Habitação: {count_habitacao} despesas")
             if count_lazer >= count_alimentação and count_lazer >= count_habitacao and count_lazer >= count_outros and count_lazer >= count_transportes:
-                print (count_lazer)
+                #print (count_lazer)    #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
                 lista_count_categorias.append(f"Lazer: {count_lazer} despesas")
             if count_transportes >= count_alimentação and count_transportes >= count_habitacao and count_transportes >= count_lazer and count_transportes >= count_outros:
-                print (count_transportes)
+                #print (count_transportes)  #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
                 lista_count_categorias.append(f"Transportes: {count_transportes} despesas")
             if count_outros >= count_alimentação and count_outros >= count_habitacao and count_outros >= count_lazer and count_outros >= count_transportes:
-                print (count_outros)
+                #print (count_outros)   #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
                 lista_count_categorias.append(f"Outros: {count_outros} despesas")
         
             if len(lista_count_categorias) == 1:
@@ -675,10 +695,10 @@ class View:
             elif len(lista_count_categorias) == 5:
                 messagebox.showinfo("Sugestão", f"As categorias no qual fez mais despesas foram:\n\n{lista_count_categorias[0]}\n{lista_count_categorias[1]}\n{lista_count_categorias[2]}\n{lista_count_categorias[3]}\n{lista_count_categorias[4]}\n\nTente reduzir o numero de despesas nestas categorias.")
             
-            print("Count Alimentacao:", count_alimentação)
-            print("Count Habitação:", count_habitacao)
-            print("Count Lazer:", count_lazer)
-            print("Count Outros:", count_outros)
+            # print("Count Alimentacao:", count_alimentação)
+            # print("Count Habitação:", count_habitacao) #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL
+            # print("Count Lazer:", count_lazer)
+            # print("Count Outros:", count_outros)
         
     def frame_ver_despesa(self):   
         username_atual = self.username
@@ -883,35 +903,34 @@ class View:
     def frame_definir_orcamento(self): #frame ver orçamento
         if self.frame:
             self.frame.destroy()    #eliminar a frame
-        
-        self.frame = tk.Frame(self.master, bg="#0076a3")  #recriar a frame
-        self.frame.pack()
 
-        self.master.geometry("500x300")
+        self.master.geometry("500x200")
         self.master.title("Orçamento")
         self.master.resizable(False, False)     #delimitadores de frame 
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()
+        self.frame = tk.Frame(self.master, bg='#0076a3')
+        self.frame.pack(fill=tk.BOTH , expand=True)
+        self.invisivel = tk.Label(self.frame, text="                                              ", bg="#0076a3")#Para ficar direito com o resto
+        self.invisivel.grid(row=0,column=0)
         
-        self.gastos_label = ttk.Label(self.frame, text="Máximo de gastos para o mês") #gastos label
-        self.gastos_label.grid(row=0, column=0)
+        self.gastos_label = tk.Label(self.frame, text="Máximo de gastos para o mês",font=("Arial"), fg="#ffffff", bg="#0076a3") #gastos label
+        self.gastos_label.grid(row=1, column=1)
         self.gastos_entry = tk.Entry(self.frame) #entry gastos
-        self.gastos_entry.grid(row=1, column=0, pady=5)
+        self.gastos_entry.grid(row=2, column=1, pady=5)
         valor_numerico_gastos = self.master.register(self.verificar_numerico) #verificacao para apenas escrever numerico e .
         self.gastos_entry.config(validate="key", validatecommand=(valor_numerico_gastos, "%P"))    
 
-        self.orcamento_label = ttk.Label(self.frame, text="Orçamento") #orcamento label
-        self.orcamento_label.grid(row=2, column=0)
+        self.orcamento_label = tk.Label(self.frame, text="Orçamento",font=("Arial"), fg="#ffffff", bg="#0076a3") #orcamento label
+        self.orcamento_label.grid(row=3, column=1)
         self.orcamento_entry = tk.Entry(self.frame) #orcamento valor
-        self.orcamento_entry.grid(row=3, column=0, pady=5)
+        self.orcamento_entry.grid(row=4, column=1, pady=5)
         valor_numerico_orcamento = self.master.register(self.verificar_numerico) #verificacao para apenas escrever numerico e .
         self.orcamento_entry.config(validate="key", validatecommand=(valor_numerico_orcamento, "%P"))  
         
-        self.definir_orc_button = tk.Button(self.frame, text="DEFINIR", command=self.definir_orcamento) #botao para definir orçamento
-        self.definir_orc_button.grid(row=4, column=0)
+        self.definir_orc_button = tk.Button(self.frame, text="DEFINIR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.definir_orcamento) #botao para definir orçamento
+        self.definir_orc_button.grid(row=5, column=1)
 
-        self.voltar_button = tk.Button(self.frame, text="VOLTAR", command=self.frame_menu) #botao voltar
-        self.voltar_button.grid(row=5, column=0)
+        self.voltar_button = tk.Button(self.frame, text="VOLTAR",font=("Arial",10), fg="#000000", bg="#ffffff", command=self.frame_menu) #botao voltar
+        self.voltar_button.grid(row=6, column=1)
 
     def definir_orcamento(self):
         gastos_mes = self.gastos_entry.get()
@@ -959,7 +978,7 @@ class View:
                     messagebox.showinfo("Erro", "O cliente já possui um orçamento.")
                     verificacao_orcamento_2 = False    
                 else:
-                    self.clientes_lista.print_list_cliente_despesas_orcamento()   #criar orcamento
+                    #self.clientes_lista.print_list_cliente_despesas_orcamento()  #CASO QUEIRA VERIFICAR OS VALORES NO TERMINAL  
                     messagebox.showinfo("Sucesso", "Orçamento criado com sucesso.")
 
                 if verificacao_orcamento_2 == False:
@@ -998,17 +1017,6 @@ class View:
 
         if self.frame:
             exit()
-
-    def from_json(self, json_data):              #Passar de dicionario para linked list
-        self.head = None
-        self.tail = None
-        self.cliente_atual = None
-        for item in json_data:
-            cliente_dict = item  
-            client = Cliente(cliente_dict["nome"], cliente_dict["password"], cliente_dict["nif"])
-            client.despesas.from_json(cliente_dict["despesas"])  
-            client.orcamento.from_json(cliente_dict["orcamento"])  
-            self.append_cliente(client)
 
     def load_lists_from_json(self):
         # Verificar se existem os arquivos JSON correspondentes às listas
