@@ -53,30 +53,32 @@ class View:
         self.master.geometry("500x300")
         self.master.title("Login")              
         self.master.resizable(False, False) #Não permite ampliar
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()
+        self.frame = tk.Frame(self.master, bg="#0076a3")
+        self.frame.pack(fill=tk.BOTH , expand=True)
+        self.invisivel = tk.Label(self.frame, text="                                       ", bg="#0076a3")#Para ficar direito com o resto
+        self.invisivel.grid(row=0,column=0)
         
-        self.label = tk.Label(self.frame, text="USERNAME")
+        self.label = tk.Label(self.frame, text="USERNAME",font=("Arial"), fg="#ffffff", bg="#0076a3")
         self.label.grid(row=0, column=0)   #label password
         self.nome_entry = tk.Entry(self.frame)  #Entrada para escrever username- pag. inicial
         self.nome_entry.grid(row=1, column=0, pady=5)   
 
-        self.password_label = tk.Label(self.frame, text="PASSWORD")
+        self.password_label = tk.Label(self.frame, text="PASSWORD",font=("Arial"), fg="#ffffff", bg="#0076a3")
         self.password_label.grid(row=2, column=0)  #label password
         validar_password = (self.master.register(self.tamanho_password), '%P')
         self.password_entry = tk.Entry(self.frame, show='*', validate='key', validatecommand=validar_password, width=16)  #Entrada para escrever password- pag. inicial
         self.password_entry.grid(row=3, column=0)
 
-        self.voltar_button = tk.Button(self.frame, text="VER/OCULTAR", command=self.ver_login)
+        self.voltar_button = tk.Button(self.frame, text="VER/OCULTAR",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.ver_login)
         self.voltar_button.grid(row=3, column=1) #Botao ver/ocultar password - pag inicial
 
-        self.login_button = tk.Button(self.frame, text="LOGIN", command=self.login)
+        self.login_button = tk.Button(self.frame, text="LOGIN",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.login)
         self.login_button.grid(row=4, column=0) #Botao Login - pag inicial
         
-        self.register_button = tk.Button(self.frame, text="REGISTAR", command=self.frame_registo) #ver nova frame
+        self.register_button = tk.Button(self.frame, text="REGISTAR",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.frame_registo) #ver nova frame
         self.register_button.grid(row=5, column=0)  #Botao Registar - pag inicial
 
-        self.quit_button = tk.Button(self.frame, text="SAIR", command=self.save_lists_to_json)
+        self.quit_button = tk.Button(self.frame, text="SAIR",font=("Arial"), fg="#ffffff", bg="#0076a3", command=self.save_lists_to_json)
         self.quit_button.grid(row=6, column=0)  #Botao Sair do programa - pag inicial
 
     def login(self):
@@ -143,7 +145,7 @@ class View:
         if self.frame:
             self.frame.destroy()    #Destruicao da frame
         
-        self.frame = tk.Frame(self.master)
+        self.frame = tk.Frame(self.master, bg="#0076a3")
         self.frame.pack()                   #Recriacao da frame
 
         self.master.geometry("500x300")
@@ -262,7 +264,7 @@ class View:
         if self.frame:
             self.frame.destroy() #destruição frame
         
-        self.frame = tk.Frame(self.master) #recriação frame
+        self.frame = tk.Frame(self.master, bg="#0076a3") #recriação frame
         self.frame.pack()
 
         self.master.geometry("500x300")
@@ -287,7 +289,7 @@ class View:
         if self.frame:
             self.frame.destroy()
 
-        self.frame = tk.Frame(self.master)
+        self.frame = tk.Frame(self.master, bg="#0076a3")
         self.frame.pack()
 
         self.master.geometry("500x300")
@@ -882,7 +884,7 @@ class View:
         if self.frame:
             self.frame.destroy()    #eliminar a frame
         
-        self.frame = tk.Frame(self.master)  #recriar a frame
+        self.frame = tk.Frame(self.master, bg="#0076a3")  #recriar a frame
         self.frame.pack()
 
         self.master.geometry("500x300")
@@ -972,14 +974,6 @@ class View:
                 if self.frame:
                     self.frame.destroy()    #destruir a frame
                     self.frame_definir_orcamento()
-                
-    def eliminar_conta(self):
-        linked_list_cliente = LinkedListCliente()
-        current_client = linked_list_cliente.cliente_logado()
-        linked_list_cliente.remove_cliente(linked_list_cliente.cliente_atual)
-        if self.frame:
-            self.frame.destroy()              #Destruicao da frame
-            self.frame_login()
         
     def tamanho_password(self, tamanho):    #função que serve para verificar o tamaho da password
         if len(tamanho) <= 16 :
@@ -1005,14 +999,6 @@ class View:
         if self.frame:
             exit()
 
-    #def load_lists_from_json(self):
-    #    filename = "dados.json"
-    #    with open(filename, 'r') as json_file:
-    #        data = json.load(json_file)
-#
-   #     self.clientes_lista.from_json(data["clientes"])
-   #     self.despesas_lista.from_json(data["despesas"])
-   #     self.orcamento_lista.from_json(data["orcamento"])
     def from_json(self, json_data):              #Passar de dicionario para linked list
         self.head = None
         self.tail = None
@@ -1024,7 +1010,6 @@ class View:
             client.orcamento.from_json(cliente_dict["orcamento"])  
             self.append_cliente(client)
 
-    
     def load_lists_from_json(self):
         # Verificar se existem os arquivos JSON correspondentes às listas
         if os.path.exists("clientes.json") and os.path.exists("despesas.json") and os.path.exists("orcamento.json"):
